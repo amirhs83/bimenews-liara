@@ -1,0 +1,89 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+local-*
+.claude
+.z-ai-config
+*.log
+dev.log
+dev.out.log
+test
+prompt
+
+server.log
+# Skills directory
+/skills/
+# Project-specific excludes
+upload/
+storage/
+screenshots/
+dev.log
+server.log
+.zscripts/dev.pid
+.zscripts/dev.log
+
+# liara - secrets (do not push prod env dump)
+.zscripts/prod-env.txt
+.zscripts/*.txt
+
+# liara - large unused petro-era media (keep on disk, keep repo small for GitHub fetch)
+public/videos/
+public/images/gallery/
+logo bime/
+bimeh.png
+d5f843f7-e479-4172-bee0-16fd30894715.png
+
+cookies.txt
+login.json
+out.bin
+*.dump
+
+
+.zscripts/set-*.mjs
+.zscripts/*secret*.mjs
+.zscripts/*liara*.mjs
+.zscripts/*neon*.mjs
+
+.zscripts/*.mjs
+.zscripts/*.js
+.zscripts/*.ts
+.zscripts/

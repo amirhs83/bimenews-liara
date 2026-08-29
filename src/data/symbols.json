@@ -1,0 +1,21 @@
+[
+  { "symbol": "آسیا", "fullName": "بیمه آسیا", "logo": "asia" },
+  { "symbol": "اتکایی", "fullName": "بیمه اتکایی امین", "logo": "amin" },
+  { "symbol": "البرز", "fullName": "بیمه البرز", "logo": "alborz" },
+  { "symbol": "پارسیان", "fullName": "بیمه پارسیان", "logo": "parsian" },
+  { "symbol": "دانا", "fullName": "بیمه دانا", "logo": "dana" },
+  { "symbol": "ملت", "fullName": "بیمه ملت", "logo": "mellat" },
+  { "symbol": "اتکا", "fullName": "بیمه اتکایی ایرانیان", "logo": "atka" },
+  { "symbol": "پاسارگاد", "fullName": "بیمه پاسارگاد", "logo": "pasargad" },
+  { "symbol": "خاورمیانه", "fullName": "بیمه زندگی خاورمیانه", "logo": "khavar" },
+  { "symbol": "سامان", "fullName": "بیمه سامان", "logo": "saman" },
+  { "symbol": "تجارت نو", "fullName": "بیمه تجارت نو", "logo": "tejaratno" },
+  { "symbol": "کوثر", "fullName": "بیمه کوثر", "logo": "kowsar" },
+  { "symbol": "ایران معین", "fullName": "بیمه ایران معین", "logo": "iranmoein" },
+  { "symbol": "میهن", "fullName": "بیمه میهن", "logo": "mihan" },
+  { "symbol": "تعاون", "fullName": "بیمه تعاون", "logo": "taavon" },
+  { "symbol": "دی", "fullName": "بیمه دی", "logo": "day" },
+  { "symbol": "معلم", "fullName": "بیمه معلم", "logo": "moallem" },
+  { "symbol": "ما", "fullName": "بیمه ما", "logo": "/icons/commodities/ma.jpg" },
+  { "symbol": "وبیمه", "fullName": "سرمایه گذاری صنعت بیمه", "logo": "/icons/commodities/webime.jpg" }
+]

@@ -1,0 +1,186 @@
+// BimeNews CMS schema
+// PostgreSQL (local dev: petrotimes_dev / production: cloud Postgres via DATABASE_URL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Auth ----------
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ---------- Taxonomy ----------
+
+model Category {
+  id              String         @id @default(cuid())
+  name            String         @unique // e.g. "بازار بیمه"
+  slug            String         @unique // e.g. "insurance-market"
+  order           Int            @default(0) // navigation order
+  posts           Post[] // main-category relation
+  postCategories  PostCategory[]
+}
+
+model Tag {
+  id    String    @id @default(cuid())
+  name  String    @unique
+  slug  String    @unique
+  posts PostTag[]
+}
+
+model PostTag {
+  postId String
+  tagId  String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+// A post may belong to several categories (in addition to its main category).
+model PostCategory {
+  postId     String
+  categoryId String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@index([categoryId])
+}
+
+// ---------- Media ----------
+
+model Media {
+  id             String   @id @default(cuid())
+  key            String   @unique // storage key (uuid + ext)
+  url            String // public URL (/api/media/<key> for local, absolute for blob)
+  provider       String // "local" | "blob"
+  kind           String // "image" | "video"
+  mimeType       String
+  size           Int // bytes
+  width          Int?
+  height         Int?
+  alt            String   @default("")
+
+  // Non-destructive crop metadata. When set, this media is a cropped copy
+  // and cropSource points to the original it was derived from (the original
+  // file is never modified, so the crop can always be re-edited).
+  cropState    Json? // { xPct, yPct, wPct, hPct, zoom, rotation, aspect }
+  cropSourceId String? @db.VarChar(64)
+  cropSource   Media?   @relation("MediaCropChain", fields: [cropSourceId], references: [id], onDelete: SetNull)
+  cropCopies   Media[]  @relation("MediaCropChain")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  homeImagePosts  Post[] @relation("HomeImage")
+  innerImagePosts Post[] @relation("InnerImage")
+  ogImagePosts    Post[] @relation("OgImage")
+
+  @@index([cropSourceId])
+}
+
+// ---------- Posts ----------
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
+
+enum VideoType {
+  NONE
+  UPLOAD
+  APARAT
+  YOUTUBE
+}
+
+model Post {
+  id     String @id @default(cuid())
+  slug   String @unique
+
+  // Content
+  kicker String? // روتیتر (optional)
+  title  String
+  lead   String
+  body   String // sanitized HTML from rich text editor
+
+  // Images
+  homeImageId  String?
+  homeImage    Media?  @relation("HomeImage", fields: [homeImageId], references: [id], onDelete: SetNull)
+  homeImageAlt String  @default("")
+  innerImageId  String?
+  innerImage    Media?  @relation("InnerImage", fields: [innerImageId], references: [id], onDelete: SetNull)
+  innerImageAlt String  @default("")
+
+  // Video (for video-type posts)
+  videoType     VideoType @default(NONE)
+  videoUrl      String? // uploaded file URL or external embed URL
+  videoDuration Int? // seconds
+
+  // Taxonomy
+  categoryId String // main category
+  category   Category @relation(fields: [categoryId], references: [id])
+  categories PostCategory[] // additional categories
+  tags       PostTag[]
+
+  // Publishing
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime
+  hasOwnPage  Boolean    @default(true)
+  views       Int        @default(0)
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+  ogImageId       String?
+  ogImage         Media?  @relation("OgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  canonicalUrl    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  placements SectionPlacement[]
+
+  @@index([status, publishedAt])
+  @@index([categoryId, status, publishedAt])
+  @@index([views])
+}
+
+// ---------- Homepage layout ----------
+
+model HomeSection {
+  id         String  @id @default(cuid())
+  key        String  @unique // "breaking" | "hero" | "videos" | "energy" | "economy" | "magazine" | "gallery"
+  name       String // Persian display name, e.g. "اخبار فوری"
+  capacity   Int     @default(5) // informational: how many positions the frontend renders
+  placements SectionPlacement[]
+}
+
+model SectionPlacement {
+  id        String      @id @default(cuid())
+  sectionId String
+  postId    String
+  position  Int
+  section   HomeSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  post      Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // One position per section; a post may still appear in many sections
+  // and even multiple times in the same section (different positions).
+  @@unique([sectionId, position])
+  @@index([postId])
+}

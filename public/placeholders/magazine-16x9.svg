@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#44403c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a8a29e" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#a8a29e" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="white" opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  <rect width="100%" height="100%" fill="url(#dots)"/>
+  <!-- abstract geometric accents -->
+  <circle cx="680" cy="90" r="81" fill="#a8a29e" opacity="0.15"/>
+  <circle cx="120" cy="382.5" r="112.5" fill="#a8a29e" opacity="0.08"/>
+  <rect x="0" y="315" width="800" height="135" fill="url(#accent)" opacity="0.5"/>
+  <!-- top-right accent line -->
+  <rect x="720" y="40" width="40" height="2" fill="#a8a29e"/>
+  <rect x="720" y="48" width="20" height="2" fill="#a8a29e" opacity="0.5"/>
+  <!-- BimeNews watermark -->
+  <text x="776" y="426" text-anchor="end" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="white" opacity="0.3">BimeNews</text>
+  <!-- category label -->
+  <text x="40" y="410" font-family="Vazirmatn, sans-serif" font-size="36" font-weight="bold" fill="white">ماهنامه</text>
+  <text x="40" y="432" font-family="sans-serif" font-size="12" letter-spacing="2" fill="white" opacity="0.6">MAGAZINE</text>
+</svg>
