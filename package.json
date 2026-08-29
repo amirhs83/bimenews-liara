@@ -9,9 +9,9 @@
   },
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "build": "prisma generate && next build",
+    "build": "prisma generate --schema=./prisma/schema.prisma && next build",
     "start": "next start -p 3000",
-    "postinstall": "prisma generate",
+    "postinstall": "echo \"skip prisma generate at install\"",
     "lint": "eslint .",
     "db:push": "prisma db push --accept-data-loss",
     "db:generate": "prisma generate",
