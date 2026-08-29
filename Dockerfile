@@ -37,18 +37,18 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
-COPY --from=base /app/.next/standalone ./
-COPY --from=base /app/.next/static ./.next/static
-COPY --from=base /app/public ./public
-COPY --from=base /app/prisma ./prisma
-COPY --from=base /app/prisma.config.ts ./prisma.config.ts
-COPY --from=base /app/scripts ./scripts
-COPY --from=base /app/package.json ./package.json
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/package.json ./package.json
 # prisma CLI for runtime migrate
-COPY --from=base /app/node_modules/prisma ./node_modules/prisma
-COPY --from=base /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
-COPY --from=base /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=base /app/node_modules/.prisma ./node_modules/.prisma 2>/dev/null || true
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma 2>/dev/null || true
 
 RUN mkdir -p /app/storage/uploads && chown -R node:node /app/storage 2>/dev/null || mkdir -p storage/uploads
 
