@@ -16,3 +16,14 @@ out
 build
 .DS_Store
 npm-debug.log*
+# large unused petro-era media (keep on disk, keep repo small for Liara)
+public/videos/
+public/images/gallery/
+logo bime/
+bimeh.png
+d5f843f7-e479-4172-bee0-16fd30894715.png
+download/
+examples/
+mini-services/
+reference-design/
+brand-assets/
