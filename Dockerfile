@@ -17,9 +17,9 @@ RUN npx prisma generate
 
 ARG DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 ARG NEXT_PUBLIC_SITE_URL=https://bimenews.com
-ARG NEXT_PUBLIC_SITE_NAME=بیمه نیوز
+ARG NEXT_PUBLIC_SITE_NAME=╪¿█î┘à┘ç ┘å█î┘ê╪▓
 ARG NEXT_PUBLIC_SITE_NAME_EN=BimeNews
-ARG NEXT_PUBLIC_SITE_TAGLINE=پایگاه خبری صنعت بیمه
+ARG NEXT_PUBLIC_SITE_TAGLINE=┘╛╪º█î┌»╪º┘ç ╪«╪¿╪▒█î ╪╡┘å╪╣╪¬ ╪¿█î┘à┘ç
 ENV DATABASE_URL=$DATABASE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_NAME=$NEXT_PUBLIC_SITE_NAME
@@ -28,7 +28,7 @@ ENV NEXT_PUBLIC_SITE_TAGLINE=$NEXT_PUBLIC_SITE_TAGLINE
 
 RUN npm run build
 
-# 3) Runner — only standalone output + assets (no 982MB node_modules copy)
+# 3) Runner ΓÇö only standalone output + assets (no 982MB node_modules copy)
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
@@ -37,18 +37,18 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/scripts ./scripts
-COPY --from=builder /app/package.json ./package.json
+COPY --from=base /app/.next/standalone ./
+COPY --from=base /app/.next/static ./.next/static
+COPY --from=base /app/public ./public
+COPY --from=base /app/prisma ./prisma
+COPY --from=base /app/prisma.config.ts ./prisma.config.ts
+COPY --from=base /app/scripts ./scripts
+COPY --from=base /app/package.json ./package.json
 # prisma CLI for runtime migrate
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma 2>/dev/null || true
+COPY --from=base /app/node_modules/prisma ./node_modules/prisma
+COPY --from=base /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
+COPY --from=base /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=base /app/node_modules/.prisma ./node_modules/.prisma 2>/dev/null || true
 
 RUN mkdir -p /app/storage/uploads && chown -R node:node /app/storage 2>/dev/null || mkdir -p storage/uploads
 
