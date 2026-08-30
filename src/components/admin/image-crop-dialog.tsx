@@ -47,7 +47,7 @@ const ASPECT_PRESETS: { label: string; value: number | null }[] = [
 ];
 
 const MAX_OUTPUT_DIMENSION = 2560;
-const MIN_ZOOM = 1;
+const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 5;
 
 function rotateSize(width: number, height: number, rotation: number) {
@@ -376,6 +376,14 @@ export default function ImageCropDialog({
             <span className="text-xs text-zinc-500 font-bold w-24 flex-shrink-0">
               زوم
             </span>
+            <button
+              type="button"
+              onClick={() => setZoom((z) => Math.max(MIN_ZOOM, +(z - 0.1).toFixed(2)))}
+              className="px-2 py-1 text-xs rounded-md border border-zinc-300 text-zinc-600 hover:border-blue-400 hover:text-blue-700 transition-colors"
+              aria-label="زوم اوت"
+            >
+              −
+            </button>
             <input
               type="range"
               min={MIN_ZOOM}
@@ -385,6 +393,14 @@ export default function ImageCropDialog({
               onChange={(e) => setZoom(parseFloat(e.target.value))}
               className="flex-1 accent-blue-600"
             />
+            <button
+              type="button"
+              onClick={() => setZoom((z) => Math.min(MAX_ZOOM, +(z + 0.1).toFixed(2)))}
+              className="px-2 py-1 text-xs rounded-md border border-zinc-300 text-zinc-600 hover:border-blue-400 hover:text-blue-700 transition-colors"
+              aria-label="زوم این"
+            >
+              +
+            </button>
             <span className="text-[11px] text-zinc-500 tabular-nums w-8 text-left">
               {zoom.toFixed(2)}
             </span>
