@@ -53,7 +53,7 @@ server.log
 # Skills directory
 /skills/
 # Project-specific excludes
-upload/
+/upload/
 storage/
 screenshots/
 dev.log
