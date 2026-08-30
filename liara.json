@@ -1,7 +1,7 @@
 {
   "app": "bimenews",
   "port": 3000,
-  "platform": "docker",
+  "platform": "node",
   "build": {
     "location": "iran",
     "cache": true
