@@ -17,9 +17,9 @@ RUN npx prisma generate
 
 ARG DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 ARG NEXT_PUBLIC_SITE_URL=https://bimenews.com
-ARG NEXT_PUBLIC_SITE_NAME=╪¿█î┘à┘ç ┘å█î┘ê╪▓
+ARG NEXT_PUBLIC_SITE_NAME="بیمه نیوز"
 ARG NEXT_PUBLIC_SITE_NAME_EN=BimeNews
-ARG NEXT_PUBLIC_SITE_TAGLINE=┘╛╪º█î┌»╪º┘ç ╪«╪¿╪▒█î ╪╡┘å╪╣╪¬ ╪¿█î┘à┘ç
+ARG NEXT_PUBLIC_SITE_TAGLINE="پایگاه خبری صنعت بیمه"
 ENV DATABASE_URL=$DATABASE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_NAME=$NEXT_PUBLIC_SITE_NAME
