@@ -1,0 +1,27 @@
+name: Deploy to Liara
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Liara CLI
+        run: npm install -g @liara/cli@9.5.1
+
+      - name: Deploy to Liara
+        env:
+          LIARA_API_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+        run: |
+          TOKEN="${LIARA_API_TOKEN:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2YTkxYThlNjcwNzRhMTg1YWMwNWE3M2EiLCJ0eXBlIjoiYXV0aCIsImlhdCI6MTc4NzkzNjU4OSwiZXhwIjoxODE5NDk0MTg5fQ.uiVFHRxDEQLGnZCQSyuBODH4OlsPIvKyPaUJi9-hg3c}"
+          echo "Deploying bimenews to Liara (iran)..."
+          liara deploy --detach --build-location iran --api-token "$TOKEN" --port 3000 --platform node
