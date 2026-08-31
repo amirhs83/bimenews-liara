@@ -604,10 +604,15 @@
   font-size: 1.05rem;
   line-height: 2.1;
   color: #27272a;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: justify;
 }
 
 .article-body p {
   margin: 0 0 1.1em;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .article-body h2 {
