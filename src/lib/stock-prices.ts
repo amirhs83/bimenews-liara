@@ -2,8 +2,14 @@ import type { CommodityPrice } from "@/lib/news-data";
 import symbolsJson from "@/data/symbols.json";
 
 const UPSTREAM_URL = "https://tsetmc-api-server-1.onrender.com/watchlist";
-const UPSTREAM_TIMEOUT_MS = 5_000;
+// Render free tier cold-starts can take 10-30s; 5s aborted almost every
+// morning warm-up request and left the ticker on stale/empty data.
+const UPSTREAM_TIMEOUT_MS = 20_000;
 const CACHE_TTL_MS = 15_000;
+// Outside 09:00-12:00 Tehran the market is closed: live 15s polling stops,
+// but re-check upstream at this slow cadence so the served snapshot
+// converges to the final close instead of freezing on an intraday value.
+const CLOSED_REVALIDATE_MS = 5 * 60_000;
 const MARKET_OPEN_MINUTES = 9 * 60;
 const MARKET_CLOSE_MINUTES = 12 * 60;
 
@@ -166,8 +172,8 @@ export function buildPrices(
 }
 
 let cache: { payload: PricesPayload; at: number } | null = null;
-let lastSeedFailureAt = 0;
-const SEED_RETRY_BACKOFF_MS = 5 * 60_000;
+let lastFailureAt = 0;
+const FAILURE_RETRY_BACKOFF_MS = 5 * 60_000;
 
 function emptyPayload(marketOpen: boolean): PricesPayload {
   return {
@@ -217,16 +223,20 @@ export async function getPrices(): Promise<PricesPayload> {
     return { ...cache.payload, marketOpen };
   }
 
-  // Outside 09:00-12:00 Tehran: never poll upstream, serve last known data.
+  // Outside 09:00-12:00 Tehran the market is closed: no live polling.
+  // Serve the last known closing prices, but re-check upstream at a slow
+  // cadence so the snapshot converges to the final close. On failure keep
+  // serving the previous snapshot (never downgrade to empty when we have data).
   if (!marketOpen) {
-    if (cache) return { ...cache.payload, stale: true, marketOpen };
-    // Nothing cached since deploy/cold start: fetch ONCE so the ticker can show
-    // the latest closing prices, then keep serving it without re-hitting upstream.
-    if (now - lastSeedFailureAt >= SEED_RETRY_BACKOFF_MS) {
+    if (cache && now - cache.at < CLOSED_REVALIDATE_MS) {
+      return { ...cache.payload, stale: true, marketOpen };
+    }
+    if (now - lastFailureAt >= FAILURE_RETRY_BACKOFF_MS) {
       const seeded = await fetchFromUpstream(now, marketOpen, true);
       if (seeded) return seeded;
-      lastSeedFailureAt = now;
+      lastFailureAt = now;
     }
+    if (cache) return { ...cache.payload, stale: true, marketOpen };
     return emptyPayload(marketOpen);
   }
 
