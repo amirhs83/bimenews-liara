@@ -9,7 +9,7 @@ export const siteDescription =
   process.env.NEXT_PUBLIC_SITE_DESCRIPTION ??
   "بیمه نیوز، پایگاه تخصصی اخبار و تحلیل صنعت بیمه ایران و جهان. آخرین اخبار بازار بیمه، تنظیم‌گری، اینشورتک و رشته‌های بیمه.";
 export const siteKeywords = (
-  process.env.NEXT_PUBLIC_SITE_KEYWORDS ?? "اخبار بیمه,صنعت بیمه,بازار بیمه,اینشورتک,تنظیم‌گری,رشته‌های بیمه"
+  process.env.NEXT_PUBLIC_SITE_KEYWORDS ?? "بیمه نیوز,BimeNews,Bime News,پایگاه خبری بیمه,اخبار بیمه,صنعت بیمه,بازار بیمه,اینشورتک,تنظیم‌گری,رشته‌های بیمه"
 ).split(",");
 
 export const siteUrl = (

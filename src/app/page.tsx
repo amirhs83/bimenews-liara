@@ -32,6 +32,7 @@ const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "NewsMediaOrganization",
   name: siteName,
+  alternateName: ["BimeNews", "Bime News", "بیمه نیوز"],
   url: siteUrl,
   logo: absoluteUrl("/og-default.png"),
   sameAs: [
@@ -50,6 +51,17 @@ const orgJsonLd = {
     areaServed: "IR",
     availableLanguage: "fa",
   },
+};
+
+// WebSite entity helps Google associate the domain with its brand names
+// (bimenews / bime news / بیمه نیوز) for brand-query rankings.
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  alternateName: ["BimeNews", "Bime News"],
+  url: siteUrl,
+  inLanguage: "fa-IR",
 };
 
 export const metadata: Metadata = {
@@ -98,6 +110,10 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
       <SiteHeader navItems={navItems} />
       <CommodityTicker />
