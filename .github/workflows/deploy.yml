@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
 
@@ -24,4 +25,6 @@ jobs:
         run: |
           TOKEN="${LIARA_API_TOKEN:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2YTkxYThlNjcwNzRhMTg1YWMwNWE3M2EiLCJ0eXBlIjoiYXV0aCIsImlhdCI6MTc4NzkzNjU4OSwiZXhwIjoxODE5NDk0MTg5fQ.uiVFHRxDEQLGnZCQSyuBODH4OlsPIvKyPaUJi9-hg3c}"
           echo "Deploying bimenews to Liara (iran)..."
-          liara deploy --detach --build-location iran --api-token "$TOKEN" --port 3000 --platform node
+          # --no-cache: one clean build to recover from the stuck build cache
+          # (no release has finished building since Sep 6). Revert after green.
+          liara deploy --detach --no-cache --build-location iran --api-token "$TOKEN" --port 3000 --platform node
