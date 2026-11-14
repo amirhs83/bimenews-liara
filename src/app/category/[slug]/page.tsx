@@ -134,7 +134,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           {/* Section header */}
           <div className="border-b-2 border-petro-black pb-2 mb-5 sm:mb-6 flex items-end justify-between">
             <div className="flex items-end gap-3">
-              <h1 className="section-heading text-2xl sm:text-3xl font-black uppercase tracking-tight">
+              <h1 className="section-heading text-2xl sm:text-3xl font-bold uppercase">
                 {category.name}
               </h1>
               <span className="text-xs text-zinc-500 mb-1.5 tabular-nums">
@@ -169,7 +169,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                         className="!w-full !h-full"
                       />
                       <div className="absolute top-2 right-2">
-                        <span className="bg-black/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded inline-flex items-center gap-1">
+                        <span className="bg-black/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 uppercase rounded inline-flex items-center gap-1">
                           <Tag className="w-2.5 h-2.5" />
                           {category.name}
                         </span>

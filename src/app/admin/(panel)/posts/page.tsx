@@ -86,7 +86,7 @@ export default function PostsListPage() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-2xl font-black text-zinc-900">پست‌ها</h1>
+          <h1 className="text-2xl font-bold text-zinc-900">پست‌ها</h1>
           <p className="text-sm text-zinc-500 mt-1">
             {total} پست — جستجو، ویرایش و حذف
           </p>

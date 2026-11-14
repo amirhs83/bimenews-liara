@@ -14,41 +14,32 @@ import {
   siteUrl,
 } from "@/lib/site";
 
-const vazirmatn = localFont({
+const iransans = localFont({
   src: [
     {
-      path: "./fonts/vazirmatn-arabic-400-normal.woff2",
+      path: "./fonts/IRANSansWeb_Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/IRANSansWeb.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/vazirmatn-arabic-500-normal.woff2",
+      path: "./fonts/IRANSansWeb_Medium.woff2",
       weight: "500",
       style: "normal",
     },
     {
-      path: "./fonts/vazirmatn-arabic-600-normal.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "./fonts/vazirmatn-arabic-700-normal.woff2",
+      path: "./fonts/IRANSansWeb_Bold.woff2",
       weight: "700",
       style: "normal",
     },
-    {
-      path: "./fonts/vazirmatn-arabic-800-normal.woff2",
-      weight: "800",
-      style: "normal",
-    },
-    {
-      path: "./fonts/vazirmatn-arabic-900-normal.woff2",
-      weight: "900",
-      style: "normal",
-    },
   ],
-  variable: "--font-vazir",
+  variable: "--font-iransans",
   display: "swap",
+  preload: true,
   adjustFontFallback: "Arial",
 });
 
@@ -88,8 +79,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" suppressHydrationWarning className={vazirmatn.variable}>
-      <body className={`${vazirmatn.className} font-vazir antialiased bg-white text-zinc-900 min-h-screen flex flex-col`}>
+    <html lang="fa" dir="rtl" suppressHydrationWarning className={iransans.variable}>
+      <body
+        className="text-justify antialiased bg-white text-zinc-900 min-h-screen flex flex-col"
+        style={{ fontFamily: "var(--font-iransans), Tahoma, Arial, sans-serif" }}
+      >
         {children}
         <Toaster />
       </body>

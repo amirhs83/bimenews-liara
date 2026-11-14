@@ -57,7 +57,7 @@ export default async function AdminDashboardPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-black text-zinc-900">داشبورد</h1>
+          <h1 className="text-2xl font-bold text-zinc-900">داشبورد</h1>
           <p className="text-sm text-zinc-500 mt-1">
             مدیریت محتوای پایگاه خبری بیمه نیوز
           </p>
@@ -81,7 +81,7 @@ export default async function AdminDashboardPage() {
             <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-2.5">
               <s.icon className="w-4 h-4" />
             </div>
-            <div className="text-xl font-black text-zinc-900 tabular-nums">
+            <div className="text-xl font-bold text-zinc-900 tabular-nums">
               {s.value}
             </div>
             <div className="text-[11px] text-zinc-500 mt-0.5">{s.label}</div>

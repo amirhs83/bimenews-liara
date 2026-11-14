@@ -112,7 +112,7 @@ export default function CategoriesPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-2xl font-black text-zinc-900">دسته‌بندی‌ها</h1>
+        <h1 className="text-2xl font-bold text-zinc-900">دسته‌بندی‌ها</h1>
         <p className="text-sm text-zinc-500 mt-1">
           دسته‌های خبری سایت — در نویگیشن، فرم پست و صفحات آرشیو استفاده می‌شوند
         </p>

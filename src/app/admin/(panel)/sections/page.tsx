@@ -106,7 +106,7 @@ export default function SectionsPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-2xl font-black text-zinc-900">چیدمان صفحه اصلی</h1>
+        <h1 className="text-2xl font-bold text-zinc-900">چیدمان صفحه اصلی</h1>
         <p className="text-sm text-zinc-500 mt-1">
           پست‌های هر بخش و موقعیت آن‌ها را مدیریت کنید — یک پست می‌تواند در چند
           بخش و حتی چند موقعیت از یک بخش باشد.

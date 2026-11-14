@@ -104,7 +104,7 @@ export default function EditPostPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-2xl font-black text-zinc-900">ویرایش پست</h1>
+        <h1 className="text-2xl font-bold text-zinc-900">ویرایش پست</h1>
         <p className="text-sm text-zinc-500 mt-1 line-clamp-1">{initial.title}</p>
       </div>
       <PostForm postId={params.id} initial={initial} />

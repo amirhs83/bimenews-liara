@@ -21,7 +21,7 @@ export default async function ContactPage() {
       <CommodityTicker />
       <main className="flex-1 bg-zinc-50">
         <div className="max-w-[900px] mx-auto px-4 lg:px-6 py-6 sm:py-10">
-          <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 mb-6 border-b-2 border-petro-black pb-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 mb-6 border-b-2 border-petro-black pb-3">
             تماس با {siteName}
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

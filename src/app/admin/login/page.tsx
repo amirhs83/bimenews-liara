@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="bg-white rounded-b-2xl shadow-xl border border-zinc-200 px-8 py-8">
-          <h1 className="text-xl font-black text-zinc-900 mb-1">
+          <h1 className="text-xl font-bold text-zinc-900 mb-1">
             ورود به پنل مدیریت
           </h1>
           <p className="text-xs text-zinc-500 mb-6">

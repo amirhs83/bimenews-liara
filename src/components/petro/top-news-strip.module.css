@@ -1,0 +1,125 @@
+/*
+ * Mobile-only variant for the FIRST featured news (hero) card.
+ * Reference: Entekhab.ir mobile lead story (flat newspaper style).
+ *
+ * Scope rules:
+ *  - Every visual override lives inside @media (max-width: 639.98px), which is
+ *    exactly the project's existing mobile breakpoint (Tailwind `sm` = 640px).
+ *    At >= 640px (tablet/desktop) this file contributes nothing at all, so the
+ *    tablet and desktop rendering stay pixel-identical to before.
+ *  - Selectors use `a.flatRoot ...` (element + class). This specificity
+ *    (0,2,0 / 0,1,1) always outranks the single-class Tailwind utilities they
+ *    must override, independent of CSS bundle order. No !important needed.
+ *  - The class is applied only to the hero card of TopNewsStrip; the TOP NEWS
+ *    list and every other component share none of these class names.
+ */
+
+/* Elements that exist only for the mobile variant */
+.rutitr,
+.metaTime {
+  display: none;
+}
+
+@media (max-width: 639.98px) {
+  /* Flat newspaper box instead of the rounded white card */
+  a.flatRoot {
+    border: 0;
+    border-radius: 0;
+    background-color: #efefef;
+    /* ~12px left / ~8px right viewport margins, as measured on the reference */
+    margin-left: -4px;
+    margin-right: -8px;
+  }
+
+  /* Full-bleed photo, sharp corners, ~1.7:1 (reference: 405 x 238) */
+  a.flatRoot .imgWrap {
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  a.flatRoot .heroImg {
+    aspect-ratio: 1.7 / 1;
+  }
+
+  /* The reference shows no «ویژه» badge on the mobile lead story photo */
+  a.flatRoot .heroBadge {
+    display: none;
+  }
+
+  /* Shared horizontal inner padding for the WHOLE text content
+     (overline, headline, lead, date/time) — equal on both sides (~4%
+     of the box width, per the reference guideline lines).
+     border-box sizing is guaranteed globally by Tailwind's preflight. */
+  a.flatRoot .txtBody {
+    padding-inline: 15px;
+    padding-bottom: 10px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* روتیتر — above the headline: black, regular 13px/21px.
+     Same box edges as headline/lead (shared padding-inline from .txtBody);
+     text starts at the same edge as the justified headline/lead.
+     Hard one-line cap: overflow is clipped with an ellipsis (…) at the
+     line end — the LEFT side in RTL, where the sentence continues. */
+  a.flatRoot .rutitr {
+    display: block;
+    font-size: 13px;
+    line-height: 21px;
+    font-weight: 400;
+    color: #000;
+    text-align: justify;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Headline — dark news blue #03349B, bold, JUSTIFIED exactly like the lead
+     so title and lead share the same left/right text edges, full text (no clamp) */
+  a.flatRoot .heroTitle {
+    display: block;
+    overflow: visible;
+    -webkit-box-orient: unset;
+    -webkit-line-clamp: unset;
+    margin-top: 0;
+    font-size: 20px;
+    line-height: 29px;
+    color: #03349b;
+    text-align: justify;
+  }
+
+  /* Lead — newspaper style: black, justified, Light 300, full text (no clamp).
+     Slightly tighter word gaps (-0.5px) keep justified lines compact;
+     an 8px gap below the headline clearly separates the two blocks;
+     line-height 23px keeps the lead lines a bit closer together. */
+  a.flatRoot .heroLead {
+    display: block;
+    overflow: visible;
+    -webkit-box-orient: unset;
+    -webkit-line-clamp: unset;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 23px;
+    color: #000;
+    text-align: justify;
+    word-spacing: -0.5px;
+  }
+
+  /* Metadata — small and very quiet, bottom-left: time leftmost, then date.
+     #a1a1aa (zinc-400) keeps it clearly fainter than the lead text. */
+  a.flatRoot .heroMeta {
+    padding-top: 10px;
+    font-size: 11px;
+    color: #a1a1aa;
+    gap: 4px;
+  }
+
+  a.flatRoot .heroMeta svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  a.flatRoot .metaTime {
+    display: inline;
+  }
+}

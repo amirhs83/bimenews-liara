@@ -4,7 +4,7 @@
 // Only PUBLISHED posts whose publishedAt is in the past are ever returned.
 
 import { db } from "./db";
-import { faDate, faTime, faViews, faDuration } from "./post-format";
+import { faDate, faTime, faDuration } from "./post-format";
 
 export interface HomePost {
   id: string;
@@ -18,7 +18,6 @@ export interface HomePost {
   href: string | null; // null when the post has no dedicated page
   imageUrl?: string;
   imageAlt: string;
-  views: string;
   videoUrl: string | null;
   isUploadedVideo: boolean;
   videoDuration: string | null;
@@ -39,7 +38,6 @@ function toHomePost(p: any): HomePost {
     href: p.hasOwnPage ? `/news/${p.slug}` : null,
     imageUrl: p.homeImage?.url ?? undefined,
     imageAlt: p.homeImageAlt || p.title,
-    views: faViews(p.views),
     videoUrl: p.videoUrl ?? null,
     isUploadedVideo: p.videoType === "UPLOAD" && Boolean(p.videoUrl),
     videoDuration: faDuration(p.videoDuration),

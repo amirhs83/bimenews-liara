@@ -533,16 +533,6 @@ export const navLinks = [
   { label: "ویدئو", href: "/category/video" },
 ];
 
-export const utilityLinks = [
-  { label: "Magazine", href: "/category/magazine", fa: false },
-  { label: "Advertise", href: "/contact", fa: false },
-  { label: "ماهنامه", href: "/category/magazine", fa: true },
-  { label: "تبلیغات", href: "/contact", fa: true },
-  { label: "پایگاه خبری", href: "/", fa: true },
-  { label: "آرشیو", href: "/category/magazine", fa: true },
-  { label: "تماس", href: "/contact", fa: true },
-];
-
 export const socialLinks = [
   {
     name: "Twitter",

@@ -17,7 +17,7 @@ export default function Error({
   return (
     <main className="flex-1 bg-zinc-50 flex items-center justify-center px-4 py-20">
       <div className="text-center">
-        <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 mb-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 mb-3">
           خطایی رخ داد
         </h1>
         <p className="text-sm sm:text-base text-zinc-500 mb-8">

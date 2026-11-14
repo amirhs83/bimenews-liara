@@ -65,7 +65,7 @@ function SubscribeBox() {
 
       <div className="relative">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md">
+          <div className="w-8 h-8 rounded-lg bg-[var(--header-footer-bg)] flex items-center justify-center shadow-md">
             <Mail className="w-4 h-4 text-white" />
           </div>
           <h3 className="font-bold text-base">عضویت در خبرنامه</h3>
@@ -93,7 +93,7 @@ function SubscribeBox() {
             <button
               type="submit"
               disabled={!agreed}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:from-zinc-300 disabled:to-zinc-300 disabled:cursor-not-allowed text-white font-bold py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md disabled:shadow-none"
+              className="w-full bg-[var(--header-footer-bg)] hover:bg-zinc-800 disabled:hover:bg-[var(--header-footer-bg)] disabled:from-zinc-300 disabled:to-zinc-300 disabled:bg-zinc-300 disabled:cursor-not-allowed text-white font-bold py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md disabled:shadow-none"
             >
               <Send className="w-4 h-4" />
               عضویت در خبرنامه
@@ -130,7 +130,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
             {/* We Are Social */}
             <div>
               <div className="border-b-2 border-petro-black pb-2 mb-3 sm:mb-4 relative">
-                <h2 className="section-heading text-lg sm:text-xl font-black tracking-tight">
+                <h2 className="section-heading text-lg sm:text-xl font-bold">
                   ما را دنبال کنید
                 </h2>
               </div>
@@ -147,7 +147,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
                     <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
                     <SocialIcon name={s.icon} />
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wide leading-tight">
+                      <div className="text-[10px] sm:text-xs font-bold uppercase leading-tight">
                         {s.name}
                       </div>
                       <div className="text-[8px] sm:text-[10px] opacity-90 leading-tight hidden sm:block">
@@ -169,7 +169,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
           <div className="lg:col-span-8">
             <div className="border-b-2 border-petro-black pb-2 mb-3 sm:mb-4 flex items-end justify-between relative">
               <div className="flex items-end gap-2 sm:gap-3">
-                <h2 className="section-heading text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight">
+                <h2 className="section-heading text-xl sm:text-2xl md:text-3xl font-bold uppercase">
                   تنظیم‌گری
                 </h2>
               </div>
@@ -196,7 +196,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
                 >
                   <div className="w-1 self-stretch bg-gradient-to-b from-blue-200 to-zinc-200 group-hover:from-blue-500 group-hover:to-blue-700 transition-colors flex-shrink-0 rounded-full"></div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5 text-[9px] sm:text-[10px] uppercase tracking-wider text-zinc-500 flex-wrap">
+                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5 text-[9px] sm:text-[10px] uppercase text-zinc-500 flex-wrap">
                       <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-1.5 sm:px-2 py-0.5 rounded-full font-medium">
                         <Tag className="w-2.5 h-2.5" />
                         {item.category}
@@ -206,7 +206,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
                         {item.date}
                       </span>
                     </div>
-                    <h3 className="font-bold text-[13px] sm:text-sm text-zinc-900 group-hover:text-blue-700 transition-colors leading-relaxed mb-1 sm:mb-1.5 line-clamp-2">
+                    <h3 className="font-bold text-[13px] sm:text-sm text-[#03349b] group-hover:text-blue-700 transition-colors leading-relaxed mb-1 sm:mb-1.5 line-clamp-2">
                       {item.title}
                     </h3>
                     <p className="text-[11px] sm:text-xs text-zinc-500 line-clamp-2 leading-relaxed">

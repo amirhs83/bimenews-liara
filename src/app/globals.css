@@ -6,9 +6,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-vazir), "Vazirmatn", sans-serif;
+  --font-sans: var(--font-iransans), Tahoma, Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-vazir: var(--font-vazir), "Vazirmatn", sans-serif;
 
   --color-petro-black: #0a0a0b;
   --color-petro-ink: #18181b;
@@ -84,6 +83,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Header & footer chrome background — consumed ONLY by site-header/site-footer */
+  --header-footer-bg: #041326;
 }
 
 .dark {
@@ -126,7 +127,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Vazirmatn", sans-serif;
+    font-family: var(--font-iransans), Tahoma, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 24px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -138,14 +141,6 @@
 }
 
 /* ============ BimeNews Custom Design System ============ */
-
-.font-vazir {
-  font-family: "Vazirmatn", sans-serif;
-}
-
-.font-display {
-  font-family: "Playfair Display", "Vazirmatn", serif;
-}
 
 /* ============ Ticker ============ */
 @keyframes ticker-scroll {
@@ -253,7 +248,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 18px;
   flex-shrink: 0;
   position: relative;
@@ -268,12 +263,12 @@
 
 /* ============ Breaking news badge ============ */
 .breaking-badge {
-  background: linear-gradient(135deg, #000 0%, #18181b 100%);
+  /* exact header chrome color — same var consumed by site-header/site-footer */
+  background: var(--header-footer-bg);
   color: #fff;
   padding: 8px 18px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 12px;
-  letter-spacing: 0.12em;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -506,7 +501,7 @@
   outline: none;
   padding: 1rem 1.25rem;
   direction: rtl;
-  font-family: "Vazirmatn", sans-serif;
+  font-family: var(--font-iransans), Tahoma, Arial, sans-serif;
   font-size: 0.95rem;
   line-height: 1.9;
   color: #27272a;
@@ -518,7 +513,7 @@
 
 .tiptap-editor .ProseMirror h2 {
   font-size: 1.45em;
-  font-weight: 800;
+  font-weight: 700;
   margin: 1.1em 0 0.5em;
   color: #09090b;
 }
@@ -619,7 +614,7 @@
 
   .article-body h2 {
     font-size: 1.5em;
-    font-weight: 800;
+    font-weight: 700;
     margin: 1.4em 0 0.6em;
     color: #09090b;
   }

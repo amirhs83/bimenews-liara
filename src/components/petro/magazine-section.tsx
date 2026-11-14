@@ -56,7 +56,7 @@ export default function MagazineSection({
 
               {/* Main headline */}
               {headline && (
-                <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black leading-[1.25] text-zinc-950 mb-8 lg:mb-10">
+                <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold leading-[1.25] text-zinc-950 mb-8 lg:mb-10">
                   <a href={headline.href ?? "#"} className="hover:text-red-700 transition-colors">
                     {headline.title}
                   </a>

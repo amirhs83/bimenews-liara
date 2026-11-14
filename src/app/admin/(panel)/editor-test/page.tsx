@@ -10,7 +10,7 @@ export default function EditorTestPage() {
   return (
     <div className="max-w-[1100px] mx-auto space-y-6">
       <div>
-        <h1 className="text-xl font-black text-zinc-900 mb-1">
+        <h1 className="text-xl font-bold text-zinc-900 mb-1">
           ویرایشگر متن غنی — TipTap
         </h1>
         <p className="text-sm text-zinc-500">
