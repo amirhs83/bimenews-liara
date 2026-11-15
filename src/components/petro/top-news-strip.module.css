@@ -26,9 +26,8 @@
     border: 0;
     border-radius: 0;
     background-color: #efefef;
-    /* ~12px left / ~8px right viewport margins, as measured on the reference */
-    margin-left: -4px;
-    margin-right: -8px;
+    /* Equal side margins, preserving the existing card width. */
+    margin-inline: -6px;
   }
 
   /* Full-bleed photo, sharp corners, ~1.7:1 (reference: 405 x 238) */
