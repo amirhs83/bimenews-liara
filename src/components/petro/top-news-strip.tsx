@@ -102,12 +102,12 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                       null / undefined / empty / whitespace-only are treated as empty. */}
                   {hero.kicker?.trim() ? <div className={styles.rutitr}>{hero.kicker}</div> : null}
                   <h2
-                    className={`mt-1 sm:mt-2 text-[16px] sm:text-[22px] lg:text-[26px] font-bold leading-[27px] sm:leading-[32px] lg:leading-[38px] text-[#03349b] line-clamp-2 ${styles.heroTitle}`}
+                    className={`mt-1 sm:mt-2 text-[16px] sm:text-[22px] lg:text-[26px] font-bold leading-[27px] sm:leading-[32px] lg:leading-[38px] text-[#03349b] line-clamp-3 ${styles.heroTitle}`}
                   >
                     {hero.title}
                   </h2>
                   <p
-                    className={`mt-1.5 sm:mt-2 text-[13px] sm:text-[16px] lg:text-[20px] font-light leading-[24px] sm:leading-[27px] lg:leading-[30px] text-[#77777F] line-clamp-2 ${styles.heroLead}`}
+                    className={`mt-1.5 sm:mt-2 text-[13px] sm:text-[16px] lg:text-[20px] font-light leading-[24px] sm:leading-[27px] lg:leading-[30px] text-[#77777F] line-clamp-4 ${styles.heroLead}`}
                   >
                     {hero.lead}
                   </p>
