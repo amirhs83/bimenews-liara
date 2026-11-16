@@ -60,7 +60,7 @@ export default function EconomyNewsSection({ items, mostViewed }: Props) {
                         {item.date}
                       </span>
                     </div>
-                    <h3 className="font-bold text-sm sm:text-base lg:text-lg text-[#03349b] group-hover:text-blue-700 transition-colors leading-relaxed mb-1 sm:mb-1.5 line-clamp-2">
+                    <h3 className="font-medium text-[14px] text-[#03349b] group-hover:text-blue-700 transition-colors leading-[26px] mb-1 sm:mb-1.5 line-clamp-2">
                       {item.title}
                     </h3>
                     {item.lead && (
@@ -98,7 +98,7 @@ export default function EconomyNewsSection({ items, mostViewed }: Props) {
                       {faDigits(idx + 1)}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-[13px] sm:text-sm font-medium text-[#03349b] group-hover:text-blue-700 transition-colors leading-snug line-clamp-2">
+                      <h4 className="text-[14px] font-medium text-[#03349b] group-hover:text-blue-700 transition-colors leading-[26px] line-clamp-2">
                         {item.title}
                       </h4>
                     </div>

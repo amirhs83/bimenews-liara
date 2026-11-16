@@ -34,7 +34,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                 <a
                   key={item.id}
                   href={item.href ?? "#"}
-                  className="flex items-center gap-3 sm:gap-4 py-3 group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
+                  className="flex items-start gap-3 sm:gap-4 py-3 group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
                 >
                   <div className="w-20 h-14 sm:w-24 sm:h-16 flex-shrink-0 overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200">
                     <SmartImage
@@ -46,8 +46,8 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                       className="!w-full !h-full"
                     />
                   </div>
-                  <div className="flex-1 min-w-0 flex flex-col">
-                    <h3 className="min-h-[42.25px] sm:min-h-[48.75px] font-bold text-[13px] sm:text-[15px] text-[#03349b] group-hover:text-blue-700 transition-colors leading-relaxed">
+                  <div className="flex-1 min-w-0 flex flex-col pt-1">
+                    <h3 className="min-h-[52px] font-medium text-[14px] text-[#03349b] group-hover:text-blue-700 transition-colors leading-[26px]">
                       «{item.title}»
                     </h3>
                     {/* Persian time + date — BELOW the title with a consistent gap:
@@ -102,12 +102,12 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                       null / undefined / empty / whitespace-only are treated as empty. */}
                   {hero.kicker?.trim() ? <div className={styles.rutitr}>{hero.kicker}</div> : null}
                   <h2
-                    className={`mt-1 sm:mt-2 text-[16px] sm:text-[22px] lg:text-[26px] font-bold leading-[27px] sm:leading-[32px] lg:leading-[38px] text-[#03349b] line-clamp-3 ${styles.heroTitle}`}
+                    className={`mt-1 sm:mt-2 text-[18px] font-bold leading-[29px] text-[#03349b] line-clamp-3 ${styles.heroTitle}`}
                   >
                     {hero.title}
                   </h2>
                   <p
-                    className={`mt-1.5 sm:mt-2 text-[13px] sm:text-[16px] lg:text-[20px] font-light leading-[24px] sm:leading-[27px] lg:leading-[30px] text-[#77777F] line-clamp-4 ${styles.heroLead}`}
+                    className={`mt-1.5 sm:mt-2 text-[13px] font-light leading-[25px] text-[#77777F] line-clamp-4 ${styles.heroLead}`}
                   >
                     {hero.lead}
                   </p>

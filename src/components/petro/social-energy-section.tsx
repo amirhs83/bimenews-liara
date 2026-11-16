@@ -206,7 +206,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
                         {item.date}
                       </span>
                     </div>
-                    <h3 className="font-bold text-[13px] sm:text-sm text-[#03349b] group-hover:text-blue-700 transition-colors leading-relaxed mb-1 sm:mb-1.5 line-clamp-2">
+                    <h3 className="font-medium text-[14px] text-[#03349b] group-hover:text-blue-700 transition-colors leading-[26px] mb-1 sm:mb-1.5 line-clamp-2">
                       {item.title}
                     </h3>
                     <p className="text-[11px] sm:text-xs text-zinc-500 line-clamp-2 leading-relaxed">

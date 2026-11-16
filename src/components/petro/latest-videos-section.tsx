@@ -117,7 +117,7 @@ export default function LatestVideosSection({ videos }: { videos: HomePost[] }) 
                     </span>
                   )}
                 </div>
-                <h3 className="text-base sm:text-xl lg:text-2xl font-bold leading-snug group-hover:text-blue-300 transition-colors line-clamp-2">
+                <h3 className="text-[13px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
                   {featured.title}
                 </h3>
                 <p className="text-[11px] sm:text-xs text-zinc-400 mt-1.5 sm:mt-2 tabular-nums">
@@ -137,7 +137,7 @@ export default function LatestVideosSection({ videos }: { videos: HomePost[] }) 
                   className="flex items-center gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl bg-zinc-900/40 hover:bg-zinc-900/80 backdrop-blur-sm border border-zinc-800/60 hover:border-blue-700/40 transition-all group"
                 >
                   <div className="flex-1 min-w-0 text-right">
-                    <h4 className="font-semibold text-[13px] sm:text-sm text-zinc-100 group-hover:text-blue-300 transition-colors line-clamp-2 leading-relaxed mb-1.5 sm:mb-2">
+                    <h4 className="font-medium text-[13px] text-zinc-100 group-hover:text-blue-300 transition-colors line-clamp-2 leading-[22px] mb-1.5 sm:mb-2">
                       {video.title}
                     </h4>
                     <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-zinc-500">

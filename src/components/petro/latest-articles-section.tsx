@@ -76,7 +76,7 @@ export default function LatestArticlesSection({ items }: { items: HomePost[] }) 
                 </div>
               </div>
               <div className="flex-1 min-w-0 p-3 sm:p-4 flex flex-col justify-center sm:justify-start">
-                <h3 className="font-bold text-sm sm:text-base text-[#03349b] group-hover:text-blue-700 transition-colors leading-relaxed mb-1 sm:mb-2 line-clamp-2 sm:line-clamp-3">
+                <h3 className="font-normal text-[14px] text-[#03349b] group-hover:text-blue-700 transition-colors leading-[21px] mb-1 sm:mb-2 line-clamp-2 sm:line-clamp-3">
                   {article.title}
                 </h3>
                 <p className="text-[11px] sm:text-xs text-zinc-600 leading-relaxed line-clamp-1 sm:line-clamp-2 mb-0 sm:mb-3 hidden sm:block">
