@@ -34,7 +34,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                 <a
                   key={item.id}
                   href={item.href ?? "#"}
-                  className="flex items-start gap-3 sm:gap-4 py-[7px] sm:py-[14px] group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
+                  className="flex items-start gap-3 sm:gap-4 py-[9px] sm:py-[14px] group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
                 >
                   <div className="w-[108px] h-[72px] sm:w-24 sm:h-16 flex-shrink-0 overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200">
                     <SmartImage
