@@ -34,7 +34,7 @@ export default function MagazineSection({
                 ) : (
                   <Image
                     src="/magazine-cover.png"
-                    alt="جلد ماهنامه بیمه نیوز - شماره ماهانه"
+                    alt="جلد ماهنامه بیمه نیوز - شماره ماهنامه"
                     width={420}
                     height={630}
                     sizes="(max-width: 640px) 240px, (max-width: 1024px) 288px, 420px"
@@ -49,7 +49,7 @@ export default function MagazineSection({
             <div className="lg:col-span-8 xl:col-span-9">
               {/* Edition line */}
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold tracking-[0.18em] text-zinc-800 uppercase mb-3 sm:mb-4">
-                <span>شماره ماهانه</span>
+                <span>شماره ماهنامه</span>
                 <span className="text-zinc-400">|</span>
                 <span className="text-zinc-500">{faDateLong(new Date())}</span>
               </div>
