@@ -34,7 +34,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                 <a
                   key={item.id}
                   href={item.href ?? "#"}
-                  className="flex items-start gap-3 sm:gap-4 py-[5px] sm:py-3 group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
+                  className="flex items-start gap-3 sm:gap-4 py-[7px] sm:py-[14px] group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
                 >
                   <div className="w-[108px] h-[72px] sm:w-24 sm:h-16 flex-shrink-0 overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200">
                     <SmartImage
@@ -47,7 +47,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                     />
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col pt-1">
-                    <h3 className="h-[52px] shrink-0 line-clamp-2 font-medium text-[14px] text-[#03349b] group-hover:text-blue-700 transition-colors leading-[26px]">
+                    <h3 className="h-[52px] shrink-0 line-clamp-2 font-medium text-[14px] text-[#08328c] group-hover:text-blue-700 transition-colors leading-[26px]">
                       «{item.title}»
                     </h3>
                     {/* Persian time + date — BELOW the title with a consistent gap:
@@ -102,7 +102,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                       null / undefined / empty / whitespace-only are treated as empty. */}
                   {hero.kicker?.trim() ? <div className={styles.rutitr}>{hero.kicker}</div> : null}
                   <h2
-                    className={`mt-1 sm:mt-2 text-[18px] font-bold leading-[29px] text-[#03349b] line-clamp-3 ${styles.heroTitle}`}
+                    className={`mt-1 sm:mt-2 text-[18px] font-bold leading-[29px] text-[#08328c] line-clamp-3 ${styles.heroTitle}`}
                   >
                     {hero.title}
                   </h2>

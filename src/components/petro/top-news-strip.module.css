@@ -75,7 +75,7 @@
     flex-shrink: 0;
   }
 
-  /* Headline — dark news blue #03349B, bold, JUSTIFIED exactly like the lead
+  /* Headline — dark news blue #08328C, bold, JUSTIFIED exactly like the lead
      so title and lead share the same left/right text edges, capped at three lines */
   a.flatRoot .heroTitle {
     display: -webkit-box;
@@ -86,7 +86,7 @@
     margin-top: 0;
     font-size: 18px;
     line-height: 29px;
-    color: #03349b;
+    color: #08328c;
     text-align: justify;
   }
 
