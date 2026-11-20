@@ -23,7 +23,7 @@ export default function EconomyNewsSection({ items, mostViewed }: Props) {
                 </div>
                 <div>
                   <h2 className="section-heading text-xl sm:text-2xl md:text-3xl font-bold uppercase">
-                    بازار بیمه
+                    بین‌الملل
                   </h2>
                 </div>
               </div>

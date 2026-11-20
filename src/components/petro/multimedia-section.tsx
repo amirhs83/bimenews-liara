@@ -26,7 +26,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
               <Camera className="w-4.5 h-4.5" />
             </span>
             <h2 className="section-heading text-2xl md:text-3xl font-bold">
-              عکس و فیلم
+              گالری
             </h2>
           </div>
           <a

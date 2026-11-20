@@ -38,7 +38,7 @@ export default function LatestArticlesSection({ items }: { items: HomePost[] }) 
         <div className="border-b-2 border-petro-black pb-2 mb-5 sm:mb-6 flex items-end justify-between relative">
           <div className="flex items-end gap-2 sm:gap-3">
             <h2 className="section-heading text-xl sm:text-2xl md:text-3xl font-bold uppercase">
-              آخرین مقالات
+              آخرین عناوین
             </h2>
           </div>
           <a

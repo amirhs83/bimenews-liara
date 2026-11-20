@@ -170,7 +170,7 @@ export default function SocialEnergySection({ items }: { items: HomePost[] }) {
             <div className="border-b-2 border-petro-black pb-2 mb-3 sm:mb-4 flex items-end justify-between relative">
               <div className="flex items-end gap-2 sm:gap-3">
                 <h2 className="section-heading text-xl sm:text-2xl md:text-3xl font-bold uppercase">
-                  تنظیم‌گری
+                  بازار بیمه
                 </h2>
               </div>
               <a
