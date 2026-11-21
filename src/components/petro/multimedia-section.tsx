@@ -89,7 +89,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
                   <div className="absolute bottom-0 right-0 left-0 p-3 text-white">
-                    <h4 className="text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
+                    <h4 className="text-[12px] sm:text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
                       {p!.title}
                     </h4>
                   </div>
@@ -135,7 +135,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
                     </div>
                   )}
                   <div className="absolute bottom-0 right-0 left-0 p-3 text-white">
-                    <h4 className="text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
+                    <h4 className="text-[12px] sm:text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
                       {videoTile.title}
                     </h4>
                   </div>
@@ -156,7 +156,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
                   <div className="absolute bottom-0 right-0 left-0 p-3 text-white">
-                    <h4 className="text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
+                    <h4 className="text-[12px] sm:text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors line-clamp-2">
                       {p4.title}
                     </h4>
                   </div>
@@ -188,7 +188,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
                   <Camera className="w-3.5 h-3.5" />
                 </div>
                 <div className="absolute bottom-0 right-0 left-0 p-4 text-white">
-                  <h4 className="text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors">
+                  <h4 className="text-[12px] sm:text-[14px] font-medium leading-[22px] group-hover:text-blue-300 transition-colors">
                     {p.title}
                   </h4>
                   <p className="text-[11px] sm:text-xs text-zinc-300 mt-1">
