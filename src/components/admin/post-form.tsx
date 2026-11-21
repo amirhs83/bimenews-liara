@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import RichTextEditor from "@/components/admin/editor/rich-text-editor";
 import MediaPicker from "@/components/admin/media-picker";
 import TagInput from "@/components/admin/tag-input";
+import { homeSectionLabel } from "@/components/admin/home-section-label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -769,7 +770,7 @@ export default function PostForm({
                       className="w-4 h-4 accent-blue-600"
                     />
                     <span className="text-sm font-medium text-zinc-800">
-                      {s.name}
+                      {homeSectionLabel(s.key, s.name)}
                     </span>
                     <span className="text-[10px] text-zinc-400">
                       (ظرفیت {s.capacity})
@@ -847,7 +848,7 @@ export default function PostForm({
             <ul className="text-sm bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 space-y-1">
               {conflicts.map((c, i) => (
                 <li key={i}>
-                  <strong>{c.sectionName}</strong> — موقعیت {c.position}: «
+                  <strong>{homeSectionLabel(c.sectionKey, c.sectionName)}</strong> — موقعیت {c.position}: «
                   {c.occupiedByTitle}»
                 </li>
               ))}

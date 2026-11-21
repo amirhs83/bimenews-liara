@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import PostPicker, { type PostSummary } from "@/components/admin/post-picker";
+import { homeSectionLabel } from "@/components/admin/home-section-label";
 import { Loader2, Plus, Save, X } from "lucide-react";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -120,7 +121,7 @@ export default function SectionsPage() {
             <div key={s.key} className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
               <div className="flex items-center justify-between bg-zinc-50 border-b border-zinc-200 px-4 py-3">
                 <div>
-                  <h2 className="font-bold text-zinc-900 text-sm">{s.name}</h2>
+                  <h2 className="font-bold text-zinc-900 text-sm">{homeSectionLabel(s.key, s.name)}</h2>
                   <span className="text-[10px] text-zinc-400">
                     ظرفیت نمایش: {s.capacity}
                   </span>
