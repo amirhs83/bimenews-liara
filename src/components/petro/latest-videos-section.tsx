@@ -11,7 +11,7 @@ function VideoVisual({ post, segment }: { post: HomePost; segment: number }) {
         start={4}
         segment={segment}
         poster={post.imageUrl}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-contain"
       />
     );
   }
@@ -152,7 +152,7 @@ export default function LatestVideosSection({ videos }: { videos: HomePost[] }) 
                       </span>
                     </div>
                   </div>
-                  <div className="relative w-24 h-16 sm:w-32 sm:h-20 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-900 ring-1 ring-zinc-800 group-hover:ring-blue-600/50 transition-all">
+                  <div className="relative w-24 sm:w-32 aspect-video flex-shrink-0 overflow-hidden rounded-lg bg-zinc-900 ring-1 ring-zinc-800 group-hover:ring-blue-600/50 transition-all">
                     <VideoVisual post={video} segment={6} />
                     <div className="absolute top-1 right-1 bg-black/70 backdrop-blur-sm text-white p-0.5 rounded">
                       {video.isUploadedVideo ? (

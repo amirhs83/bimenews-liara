@@ -335,7 +335,7 @@ export default async function NewsPage({ params }: Params) {
                   href={r.hasOwnPage ? `/news/${r.slug}` : "#"}
                   className="group lift-on-hover bg-white border border-zinc-200 rounded-xl overflow-hidden"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-zinc-100">
+                  <div className="relative aspect-video overflow-hidden bg-zinc-100">
                     <SmartImage
                       src={r.homeImage?.url}
                       alt={r.homeImageAlt || r.title}

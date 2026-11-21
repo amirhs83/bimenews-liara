@@ -118,7 +118,7 @@ export default function VideoPreview({
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 680px"
           quality={80}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+          className="absolute inset-0 w-full h-full object-contain transition-opacity duration-300"
           style={{ opacity: isPlaying ? 0 : 1 }}
         />
       )}
@@ -134,7 +134,7 @@ export default function VideoPreview({
           preload="auto"
           disablePictureInPicture
           onPlaying={() => setIsPlaying(true)}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+          className="absolute inset-0 w-full h-full object-contain transition-opacity duration-300"
           style={{ opacity: isPlaying ? 1 : 0 }}
         />
       )}

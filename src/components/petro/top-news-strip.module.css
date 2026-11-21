@@ -30,14 +30,14 @@
     margin-inline: -6px;
   }
 
-  /* Full-bleed photo, sharp corners, ~1.7:1 (reference: 405 x 238) */
+  /* Full-bleed photo, sharp corners, standard 16:9 frame */
   a.flatRoot .imgWrap {
     padding: 0;
     margin-bottom: 10px;
   }
 
   a.flatRoot .heroImg {
-    aspect-ratio: 1.7 / 1;
+    aspect-ratio: 16 / 9;
   }
 
   /* The reference shows no «ویژه» badge on the mobile lead story photo */

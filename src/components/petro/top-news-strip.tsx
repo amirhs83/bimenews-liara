@@ -36,7 +36,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                   href={item.href ?? "#"}
                   className="flex items-start gap-3 sm:gap-4 py-[9px] sm:py-[14px] group hover:bg-zinc-50/60 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-all"
                 >
-                  <div className="w-[108px] h-[72px] sm:w-24 sm:h-16 flex-shrink-0 overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200">
+                  <div className="w-[108px] sm:w-24 aspect-video flex-shrink-0 overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200">
                     <SmartImage
                       src={item.imageUrl}
                       alt={item.imageAlt}
@@ -84,7 +84,7 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                       category={hero.categoryKey}
                       priority
                       sizes="(max-width: 1024px) 100vw, 660px"
-                      className={`aspect-[19/10] lg:aspect-[2/1] w-full ${styles.heroImg}`}
+                      className={`aspect-video w-full ${styles.heroImg}`}
                     />
 
                     {/* «ویژه» badge — top-right of the photo, small size */}

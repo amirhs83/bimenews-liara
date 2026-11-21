@@ -160,7 +160,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                     href={post.hasOwnPage ? `/news/${post.slug}` : "#"}
                     className="group lift-on-hover bg-white border border-zinc-200 rounded-xl overflow-hidden"
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden bg-zinc-100">
+                    <div className="relative aspect-video overflow-hidden bg-zinc-100">
                       <SmartImage
                         src={post.homeImage?.url}
                         alt={post.homeImageAlt || post.title}

@@ -58,8 +58,8 @@ export default function LatestArticlesSection({ items }: { items: HomePost[] }) 
               href={article.href ?? "#"}
               className="group lift-on-hover bg-white border border-zinc-200 rounded-xl overflow-hidden flex sm:block"
             >
-              {/* Image — square thumb on mobile, full-width on desktop */}
-              <div className="relative w-24 sm:w-auto flex-shrink-0 sm:flex-shrink aspect-square sm:aspect-[16/10] overflow-hidden bg-zinc-100 self-stretch sm:self-auto">
+              {/* Image — 16:9 thumb on mobile, full-width on desktop */}
+              <div className="relative w-24 sm:w-auto flex-shrink-0 sm:flex-shrink aspect-video overflow-hidden bg-zinc-100 self-start">
                 <SmartImage
                   src={article.imageUrl}
                   alt={article.imageAlt}

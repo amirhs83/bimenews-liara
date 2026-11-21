@@ -44,7 +44,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
           {featured && (
             <a
               href={featured.href ?? "#"}
-              className="lg:col-span-6 block relative overflow-hidden rounded-xl group aspect-[4/3] bg-zinc-200"
+              className="lg:col-span-6 block relative overflow-hidden rounded-xl group aspect-video self-start bg-zinc-200"
             >
               <SmartImage
                 src={featured.imageUrl}
@@ -72,12 +72,12 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
 
           {/* Two stacked photos */}
           {(p2 || p3) && (
-            <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-1 lg:grid-rows-2 gap-4">
+            <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-1 lg:grid-rows-2 content-start items-start gap-4">
               {[p2, p3].filter(Boolean).map((p) => (
                 <a
                   key={p!.id}
                   href={p!.href ?? "#"}
-                  className="block relative overflow-hidden rounded-xl group aspect-[4/3] md:aspect-auto bg-zinc-200"
+                  className="block relative overflow-hidden rounded-xl group aspect-video self-start bg-zinc-200"
                 >
                   <SmartImage
                     src={p!.imageUrl}
@@ -100,11 +100,11 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
 
           {/* Video tile + photo */}
           {(videoTile || p4) && (
-            <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-1 lg:grid-rows-2 gap-4">
+            <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-1 lg:grid-rows-2 content-start items-start gap-4">
               {videoTile && (
                 <a
                   href={videoTile.href ?? "#"}
-                  className="block relative overflow-hidden rounded-xl group aspect-[4/3] md:aspect-auto bg-zinc-900"
+                  className="block relative overflow-hidden rounded-xl group aspect-video self-start bg-zinc-900"
                 >
                   {videoTile.isUploadedVideo && videoTile.videoUrl ? (
                     <VideoPreview
@@ -112,7 +112,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
                       start={4}
                       segment={8}
                       poster={videoTile.imageUrl}
-                      className="absolute inset-0 w-full h-full object-cover opacity-95 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                      className="absolute inset-0 w-full h-full object-contain opacity-95 group-hover:opacity-100 transition-all duration-700"
                     />
                   ) : (
                     <SmartImage
@@ -144,7 +144,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
               {p4 && (
                 <a
                   href={p4.href ?? "#"}
-                  className="block relative overflow-hidden rounded-xl group aspect-[4/3] md:aspect-auto bg-zinc-200"
+                  className="block relative overflow-hidden rounded-xl group aspect-video self-start bg-zinc-200"
                 >
                   <SmartImage
                     src={p4.imageUrl}
@@ -173,7 +173,7 @@ export default function MultimediaSection({ items }: { items: HomePost[] }) {
               <a
                 key={p.id}
                 href={p.href ?? "#"}
-                className="block relative overflow-hidden rounded-xl group aspect-[16/7] bg-zinc-200"
+                className="block relative overflow-hidden rounded-xl group aspect-video bg-zinc-200"
               >
                 <SmartImage
                 src={p.imageUrl}
