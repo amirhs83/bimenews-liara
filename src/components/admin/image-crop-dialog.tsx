@@ -1,18 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Cropper, {
-  getInitialCropFromCroppedAreaPercentages,
-} from "react-easy-crop";
-import "react-easy-crop/react-easy-crop.css";
+import { changeCrop, fitCrop, type Rect, type Handle } from "./crop-geometry";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, RotateCw } from "lucide-react";
-import type { Area, MediaSize, Point, Size } from "react-easy-crop";
+
 import type { CropState } from "@/lib/upload-client";
 
 export interface CropOutput {
@@ -47,8 +43,7 @@ const ASPECT_PRESETS: { label: string; value: number | null }[] = [
 ];
 
 const MAX_OUTPUT_DIMENSION = 2560;
-const MIN_ZOOM = 0.3;
-const MAX_ZOOM = 5;
+
 
 function rotateSize(width: number, height: number, rotation: number) {
   const rad = (rotation * Math.PI) / 180;
@@ -56,23 +51,6 @@ function rotateSize(width: number, height: number, rotation: number) {
     width: Math.abs(Math.cos(rad) * width) + Math.abs(Math.sin(rad) * height),
     height: Math.abs(Math.sin(rad) * width) + Math.abs(Math.cos(rad) * height),
   };
-}
-
-/** Same math react-easy-crop uses internally (helpers.getCropSize). */
-function cropSizeFromContainer(
-  mediaSize: Size,
-  container: Size,
-  aspect: number | null,
-  rotation: number
-): Size {
-  if (aspect === null) return { width: container.width, height: container.height };
-  const { width, height } = rotateSize(mediaSize.width, mediaSize.height, rotation);
-  const fittingWidth = Math.min(width, container.width);
-  const fittingHeight = Math.min(height, container.height);
-  if (fittingWidth > fittingHeight * aspect) {
-    return { width: fittingHeight * aspect, height: fittingHeight };
-  }
-  return { width: fittingWidth, height: fittingWidth / aspect };
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -91,12 +69,11 @@ function extForMime(mime: string): string {
 }
 
 /** Renders the source image onto a canvas honoring rotation and the crop area.
- *  croppedAreaPixels from react-easy-crop is already in the rotated natural-image
- *  coordinate space, so we sample it directly (canonical getCroppedImg approach).
+ *  Crop coordinates refer to the rotated natural image, independently of zoom.
  *  The output keeps the SOURCE format (PNG stays PNG, WebP stays WebP, ...). */
 async function cropImage(
   imageSrc: string,
-  pixelCrop: Area,
+  pixelCrop: Rect,
   rotation: number,
   mime: string
 ): Promise<CropOutput> {
@@ -129,8 +106,8 @@ async function cropImage(
   const sh = Math.min(pixelCrop.height, tmp.height - sy);
 
   // downscale if the output would be huge
-  let outW = Math.round(sw);
-  let outH = Math.round(sh);
+  let outW = Math.max(1, Math.round(sw));
+  let outH = Math.max(1, Math.round(sh));
   const maxDim = Math.max(outW, outH);
   if (maxDim > MAX_OUTPUT_DIMENSION) {
     const k = MAX_OUTPUT_DIMENSION / maxDim;
@@ -172,303 +149,202 @@ async function cropImage(
   };
 }
 
+
 export default function ImageCropDialog({
-  open,
-  imageSrc,
-  title = "کِراپ تصویر",
-  defaultAspect,
-  outputMime,
-  initialState,
-  onCancel,
-  onConfirm,
+  open, imageSrc, title = "کِراپ تصویر", defaultAspect, outputMime, initialState, onCancel, onConfirm,
 }: ImageCropDialogProps) {
-  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [source, setSource] = useState<HTMLImageElement | null>(null);
   const [rotation, setRotation] = useState(0);
-  const [aspect, setAspect] = useState<number | null>(defaultAspect ?? null);
-  const [pctArea, setPctArea] = useState<Area | null>(null);
-  const [pixelArea, setPixelArea] = useState<Area | null>(null);
+  const [aspect, setAspect] = useState<number | null>(null);
+  const [area, setArea] = useState<Rect | null>(null);
+  const [zoom, setZoom] = useState(1);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // container size (for true "آزاد" mode + state restore)
-  const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null);
-  const [containerSize, setContainerSize] = useState<Size | null>(null);
-  const [mediaSize, setMediaSize] = useState<MediaSize | null>(null);
-  const restoredRef = useRef(false);
+  const [viewport, setViewport] = useState<HTMLDivElement | null>(null);
+  const [viewportWidth, setViewportWidth] = useState(300);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewRef = useRef<HTMLCanvasElement>(null);
+  const drag = useRef<{ id: number; x: number; y: number; area: Rect; handle: Handle; scale: number } | null>(null);
+  const busyRef = useRef(false);
 
   useEffect(() => {
-    if (open) {
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setRotation(0);
-      setAspect(defaultAspect ?? null);
-      setPctArea(null);
-      setPixelArea(null);
-      setError(null);
-      setBusy(false);
-      setMediaSize(null);
-      restoredRef.current = false;
-    }
-  }, [open, defaultAspect]);
-
-  // measure the cropper container (callback ref catches the portal mount,
-  // ResizeObserver keeps it in sync afterwards)
-  useEffect(() => {
-    if (!containerEl || !open) return;
-    const measure = () => {
-      const r = containerEl.getBoundingClientRect();
-      if (r.width && r.height) {
-        setContainerSize({ width: r.width, height: r.height });
+    if (!open || !imageSrc) return;
+    let cancelled = false;
+    setSource(null); setArea(null); setError(null); setBusy(false); busyRef.current = false;
+    setZoom(1);
+    loadImage(imageSrc).then(image => {
+      if (cancelled) return;
+      const angle = initialState?.rotation ?? 0;
+      const ratio = initialState ? initialState.aspect : defaultAspect ?? null;
+      const bounds = rotateSize(image.naturalWidth, image.naturalHeight, angle);
+      let rect = fitCrop(bounds, ratio);
+      if (initialState && initialState.wPct > 0 && initialState.hPct > 0) {
+        const x = Math.max(0, Math.min(99.99, initialState.xPct)) * bounds.width / 100;
+        const y = Math.max(0, Math.min(99.99, initialState.yPct)) * bounds.height / 100;
+        rect = { x, y,
+          width: Math.min(bounds.width - x, initialState.wPct * bounds.width / 100),
+          height: Math.min(bounds.height - y, initialState.hPct * bounds.height / 100) };
       }
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(containerEl);
-    return () => ro.disconnect();
-  }, [containerEl, open]);
+      setRotation(angle); setAspect(ratio); setArea(rect); setSource(image);
+    }).catch(e => { if (!cancelled) setError(e.message); });
+    return () => { cancelled = true; };
+  }, [open, imageSrc, initialState, defaultAspect]);
 
-  const mime =
-    outputMime === "image/png" || outputMime === "image/webp"
-      ? outputMime
-      : "image/jpeg";
-
-  // restore a previously saved crop (non-destructive re-edit)
   useEffect(() => {
-    if (!open || !initialState || restoredRef.current) return;
-    if (!mediaSize || !containerSize) return;
-    const cropSize = cropSizeFromContainer(
-      mediaSize,
-      containerSize,
-      initialState.aspect ?? null,
-      initialState.rotation ?? 0
-    );
-    const pct: Area = {
-      x: initialState.xPct,
-      y: initialState.yPct,
-      width: initialState.wPct,
-      height: initialState.hPct,
-    };
-    if (!pct.width || !pct.height) return;
-    const { crop: restoredCrop, zoom: restoredZoom } =
-      getInitialCropFromCroppedAreaPercentages(
-        pct,
-        mediaSize,
-        initialState.rotation ?? 0,
-        cropSize,
-        MIN_ZOOM,
-        MAX_ZOOM
-      );
-    restoredRef.current = true;
-    setAspect(initialState.aspect ?? null);
-    setRotation(initialState.rotation ?? 0);
-    setZoom(restoredZoom);
-    setCrop(restoredCrop);
-  }, [open, initialState, mediaSize, containerSize]);
+    if (!viewport) return;
+    const measure = () => setViewportWidth(Math.max(1, viewport.clientWidth - 32));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, [viewport]);
 
-  function onCropComplete(pct: Area, pixels: Area) {
-    setPctArea(pct);
-    setPixelArea(pixels);
+  const bounds = source ? rotateSize(source.naturalWidth, source.naturalHeight, rotation) : { width: 1, height: 1 };
+  const scale = Math.min(viewportWidth / bounds.width, 340 / bounds.height, 1) * zoom;
+  const shownWidth = bounds.width * scale, shownHeight = bounds.height * scale;
+  const outputScale = area ? Math.min(1, MAX_OUTPUT_DIMENSION / Math.max(area.width, area.height)) : 1;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !source) return;
+    canvas.width = Math.max(1, Math.round(shownWidth));
+    canvas.height = Math.max(1, Math.round(shownHeight));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(canvas.width / bounds.width, canvas.height / bounds.height);
+    ctx.rotate(rotation * Math.PI / 180);
+    ctx.drawImage(source, -source.naturalWidth / 2, -source.naturalHeight / 2);
+  }, [source, rotation, shownWidth, shownHeight, bounds.width, bounds.height]);
+
+  useEffect(() => {
+    const canvas = previewRef.current;
+    if (!canvas || !source || !area) return;
+    const ratio = Math.min(240 / area.width, 100 / area.height, 1);
+    canvas.width = Math.max(1, Math.round(area.width * ratio));
+    canvas.height = Math.max(1, Math.round(area.height * ratio));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.scale(canvas.width / area.width, canvas.height / area.height);
+    ctx.translate(bounds.width / 2 - area.x, bounds.height / 2 - area.y);
+    ctx.rotate(rotation * Math.PI / 180);
+    ctx.drawImage(source, -source.naturalWidth / 2, -source.naturalHeight / 2);
+  }, [source, area, rotation, bounds.width, bounds.height]);
+
+  function startDrag(e: React.PointerEvent<HTMLDivElement>, handle: Handle) {
+    if (busy || !area || e.button !== 0) return;
+    e.preventDefault(); e.stopPropagation();
+    e.currentTarget.focus();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, area, handle, scale };
   }
-
+  function moveDrag(e: React.PointerEvent<HTMLDivElement>) {
+    const current = drag.current;
+    if (!current || current.id !== e.pointerId || busy) return;
+    setArea(changeCrop(current.area, current.handle, (e.clientX - current.x) / current.scale,
+      (e.clientY - current.y) / current.scale, bounds, aspect));
+  }
+  function keyboard(e: React.KeyboardEvent<HTMLDivElement>, handle: Handle) {
+    if (!area || busy || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) return;
+    e.preventDefault(); e.stopPropagation();
+    const step = (e.shiftKey ? 10 : 1) / scale;
+    setArea(changeCrop(area, handle, e.key === "ArrowLeft" ? -step : e.key === "ArrowRight" ? step : 0,
+      e.key === "ArrowUp" ? -step : e.key === "ArrowDown" ? step : 0, bounds, aspect));
+  }
+  function reset(angle = 0, ratio: number | null = null) {
+    if (!source || busy) return;
+    setRotation(angle); setAspect(ratio); setZoom(1);
+    setArea(fitCrop(rotateSize(source.naturalWidth, source.naturalHeight, angle), ratio));
+  }
   async function handleConfirm() {
-    if (!imageSrc) return;
-    if (!pixelArea) {
-      setError("تصویر هنوز بارگذاری نشده — کمی صبر کنید و دوباره تلاش کنید");
-      return;
-    }
-    if (busy) return;
-    setBusy(true);
-    setError(null);
+    if (!imageSrc || !area || busyRef.current) return;
+    busyRef.current = true; setBusy(true); setError(null);
     try {
-      const out = await cropImage(imageSrc, pixelArea, rotation, mime);
-      out.state = {
-        xPct: pctArea?.x ?? 0,
-        yPct: pctArea?.y ?? 0,
-        wPct: pctArea?.width ?? 100,
-        hPct: pctArea?.height ?? 100,
-        zoom,
-        rotation,
-        aspect,
-      };
+      const mime = outputMime === "image/png" || outputMime === "image/webp" ? outputMime : "image/jpeg";
+      const out = await cropImage(imageSrc, area, rotation, mime);
+      out.state = { xPct: area.x / bounds.width * 100, yPct: area.y / bounds.height * 100,
+        wPct: area.width / bounds.width * 100, hPct: area.height / bounds.height * 100,
+        zoom, rotation, aspect };
       await onConfirm(out);
     } catch (e) {
       setError(e instanceof Error ? e.message : "کِراپ ناموفق بود");
-      setBusy(false);
-    }
+    } finally { busyRef.current = false; setBusy(false); }
   }
-
+  const handles: { handle: Handle; label: string; left: string; top: string; cursor: string }[] = [
+    { handle: "nw", label: "بالا چپ", left: "0%", top: "0%", cursor: "nwse-resize" },
+    { handle: "n", label: "بالا", left: "50%", top: "0%", cursor: "ns-resize" },
+    { handle: "ne", label: "بالا راست", left: "100%", top: "0%", cursor: "nesw-resize" },
+    { handle: "e", label: "راست", left: "100%", top: "50%", cursor: "ew-resize" },
+    { handle: "se", label: "پایین راست", left: "100%", top: "100%", cursor: "nwse-resize" },
+    { handle: "s", label: "پایین", left: "50%", top: "100%", cursor: "ns-resize" },
+    { handle: "sw", label: "پایین چپ", left: "0%", top: "100%", cursor: "nesw-resize" },
+    { handle: "w", label: "چپ", left: "0%", top: "50%", cursor: "ew-resize" },
+  ];
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(v) => {
-        if (!v && !busy) onCancel();
-      }}
-    >
-      <DialogContent
-        className="sm:max-w-5xl flex flex-col overflow-hidden"
-        dir="rtl"
-      >
+    <Dialog open={open} onOpenChange={v => { if (!v && !busyRef.current) onCancel(); }}>
+      <DialogContent dir="rtl" showCloseButton={!busy}
+        className="sm:max-w-5xl max-h-[92dvh] overflow-y-auto flex flex-col">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <p className="text-xs text-zinc-500 -mt-1">
-            اصل تصویر در کتابخانه حفظ می‌شود و کراپ همیشه قابل ویرایش است — فرمت
-            اصلی (png/webp/jpg) نیز حفظ می‌شود.
-          </p>
+          <p className="text-xs text-zinc-500">لبه‌ها یا گوشه‌های کادر را بکشید؛ برای جابه‌جایی، داخل کادر را بکشید. کلیدهای جهت‌دار نیز فعال‌اند.</p>
         </DialogHeader>
-
-        {/* cropper area — tall so the crop area feels open */}
-        <div
-          ref={setContainerEl}
-          className="relative w-full h-[50vh] min-h-[380px] max-h-[620px] bg-zinc-900 rounded-xl overflow-hidden shrink-0"
-        >
-          {imageSrc ? (
-            <Cropper
-              image={imageSrc}
-              crop={crop}
-              zoom={zoom}
-              rotation={rotation}
-              minZoom={MIN_ZOOM}
-              maxZoom={MAX_ZOOM}
-              aspect={aspect ?? undefined}
-              cropSize={aspect === null ? (containerSize ?? undefined) : undefined}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onRotationChange={setRotation}
-              onCropComplete={onCropComplete}
-              onMediaLoaded={setMediaSize}
-              showGrid
-              zoomSpeed={0.6}
-              objectFit="contain"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-zinc-500 text-sm">
-              تصویری برای کِراپ وجود ندارد
+        <div ref={setViewport} dir="ltr" className="overflow-auto bg-zinc-900 rounded-xl max-h-[45dvh] min-h-40 shrink-0">
+          {source && area ? (
+            <div style={{ width: Math.max(shownWidth + 32, viewportWidth + 32), padding: 16 }}>
+              <div className="relative mx-auto" style={{ width: shownWidth, height: shownHeight }}>
+                <canvas ref={canvasRef} className="block" style={{ width: shownWidth, height: shownHeight }} />
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <div style={{ position: "absolute", left: area.x * scale, top: area.y * scale,
+                    width: area.width * scale, height: area.height * scale, boxShadow: "0 0 0 9999px #0009" }} />
+                </div>
+                <div role="group" aria-label="جابه‌جایی کادر کراپ" tabIndex={busy ? -1 : 0}
+                  onPointerDown={e => startDrag(e, "move")} onPointerMove={moveDrag}
+                  onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}
+                  onLostPointerCapture={() => { drag.current = null; }} onKeyDown={e => keyboard(e, "move")}
+                  className="absolute border-2 border-white touch-none cursor-move focus:outline-2 focus:outline-blue-400"
+                  style={{ left: area.x * scale, top: area.y * scale, width: area.width * scale, height: area.height * scale }}>
+                  <div className="absolute inset-x-0 top-1/3 h-1/3 border-y border-white/40 pointer-events-none" />
+                  <div className="absolute inset-y-0 left-1/3 w-1/3 border-x border-white/40 pointer-events-none" />
+                  {handles.map(h => (
+                    <div key={h.handle} role="button" aria-label={`تغییر اندازه از ${h.label}`} tabIndex={busy ? -1 : 0}
+                      onPointerDown={e => startDrag(e, h.handle)} onKeyDown={e => keyboard(e, h.handle)}
+                      className="absolute flex items-center justify-center w-7 h-7 touch-none focus:outline-2 focus:outline-blue-400"
+                      style={{ left: h.left, top: h.top, transform: "translate(-50%, -50%)", cursor: h.cursor }}>
+                      <span className="w-2.5 h-2.5 bg-white border border-blue-600 rounded-sm pointer-events-none" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          )}
+          ) : <p className="p-8 text-center text-white text-sm">در حال بارگذاری تصویر…</p>}
         </div>
-
-        {/* controls */}
-        <div className="space-y-3 pt-3">
-          {/* aspect presets */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs text-zinc-500 font-bold ml-1">
-              نسبت تصویر:
-            </span>
-            {ASPECT_PRESETS.map((p) => (
-              <button
-                key={p.label}
-                type="button"
-                onClick={() => setAspect(p.value)}
-                className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors ${
-                  aspect === p.value
-                    ? "bg-blue-600 text-white border-blue-600 font-bold"
-                    : "border-zinc-300 text-zinc-600 hover:border-blue-400"
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
+        <fieldset disabled={busy || !source} className="space-y-3 disabled:opacity-60">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs">نسبت تصویر:</span>
+            {ASPECT_PRESETS.map(p => <button type="button" key={p.label} aria-pressed={aspect === p.value}
+              onClick={() => { setAspect(p.value); if (p.value) setArea(fitCrop(bounds, p.value)); }}
+              className={`border rounded px-2 py-1 text-xs ${aspect === p.value ? "bg-blue-600 text-white border-blue-600" : "border-zinc-300"}`}>{p.label}</button>)}
           </div>
-
-          {/* zoom */}
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-zinc-500 font-bold w-24 flex-shrink-0">
-              زوم
-            </span>
-            <button
-              type="button"
-              onClick={() => setZoom((z) => Math.max(MIN_ZOOM, +(z - 0.1).toFixed(2)))}
-              className="px-2 py-1 text-xs rounded-md border border-zinc-300 text-zinc-600 hover:border-blue-400 hover:text-blue-700 transition-colors"
-              aria-label="زوم اوت"
-            >
-              −
-            </button>
-            <input
-              type="range"
-              min={MIN_ZOOM}
-              max={MAX_ZOOM}
-              step={0.01}
-              value={zoom}
-              onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="flex-1 accent-blue-600"
-            />
-            <button
-              type="button"
-              onClick={() => setZoom((z) => Math.min(MAX_ZOOM, +(z + 0.1).toFixed(2)))}
-              className="px-2 py-1 text-xs rounded-md border border-zinc-300 text-zinc-600 hover:border-blue-400 hover:text-blue-700 transition-colors"
-              aria-label="زوم این"
-            >
-              +
-            </button>
-            <span className="text-[11px] text-zinc-500 tabular-nums w-8 text-left">
-              {zoom.toFixed(2)}
-            </span>
+          <div className="flex flex-wrap items-center gap-3 text-xs">
+            <label className="flex items-center gap-2">بزرگ‌نمایی
+              <input aria-label="بزرگ‌نمایی" dir="ltr" type="range" min="1" max="3" step="0.05" value={zoom}
+                onChange={e => setZoom(Number(e.target.value))} className="w-28 accent-blue-600" />
+            </label>
+            <button type="button" className="border rounded px-2 py-1" onClick={() => reset((rotation + 90) % 360, aspect)}>چرخش ۹۰ درجه</button>
+            <button type="button" className="border rounded px-2 py-1" onClick={() => reset()}>بازنشانی کامل</button>
           </div>
-
-          {/* rotation */}
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-zinc-500 font-bold w-24 flex-shrink-0">
-              چرخش
-            </span>
-            <button
-              type="button"
-              onClick={() => setRotation((r) => (r + 90) % 360)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] rounded-md border border-zinc-300 text-zinc-600 hover:border-blue-400 hover:text-blue-700 transition-colors"
-            >
-              <RotateCw className="w-3 h-3" />
-              ۹۰ درجه
-            </button>
-            <button
-              type="button"
-              onClick={() => setRotation((r) => (r + 270) % 360)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] rounded-md border border-zinc-300 text-zinc-600 hover:border-blue-400 hover:text-blue-700 transition-colors"
-            >
-              <RotateCw className="w-3 h-3 rotate-180" />
-              ۹۰- درجه
-            </button>
-            {rotation !== 0 && (
-              <button
-                type="button"
-                onClick={() => setRotation(0)}
-                className="px-2.5 py-1 text-[11px] rounded-md border border-zinc-300 text-zinc-500 hover:border-red-300 hover:text-red-600 transition-colors"
-              >
-                بازنشانی
-              </button>
-            )}
-          </div>
-        </div>
-
-        {error && (
-          <p className="text-sm text-red-600 pt-1 bg-red-50 rounded-md px-2 py-1">
-            {error}
-          </p>
-        )}
-
-        {/* actions */}
-        <div className="flex items-center justify-between pt-3 border-t border-zinc-100 mt-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={busy}
-            className="px-4 py-2 text-sm text-zinc-600 hover:text-zinc-900 disabled:opacity-50"
-          >
-            انصراف
-          </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            disabled={busy || !imageSrc}
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-60 text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors"
-          >
-            {busy ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                در حال کِراپ...
-              </>
-            ) : (
-              "اعمال کِراپ"
-            )}
+        </fieldset>
+        {area && <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-600">
+          <canvas ref={previewRef} aria-label="پیش‌نمایش خروجی کراپ" className="max-w-60 border rounded" />
+          <div><p>پیش‌نمایش خروجی: <b dir="ltr">{Math.max(1, Math.round(area.width * outputScale))} × {Math.max(1, Math.round(area.height * outputScale))}</b> پیکسل</p>
+            <p className="mt-2">نسخهٔ اصلی حفظ می‌شود. پس از اعمال کراپ، پست را هم ذخیره کنید.</p></div>
+        </div>}
+        {error && <p role="alert" className="text-sm text-red-600 bg-red-50 rounded p-2">{error}</p>}
+        <div className="flex items-center justify-between border-t pt-3">
+          <button type="button" onClick={onCancel} disabled={busy} className="px-4 py-2 text-sm disabled:opacity-50">انصراف</button>
+          <button type="button" onClick={handleConfirm} disabled={busy || !source || !area}
+            className="bg-blue-600 text-white rounded-lg px-5 py-2 text-sm disabled:opacity-50">
+            {busy ? "در حال آماده‌سازی و آپلود…" : "اعمال کراپ و انتخاب تصویر"}
           </button>
         </div>
       </DialogContent>

@@ -58,6 +58,14 @@ export default function MediaPicker({
   const [cropTarget, setCropTarget] = useState<UploadedMedia | null>(null);
   const [cropInitial, setCropInitial] = useState<CropState | null>(null);
   const uploadedRef = useRef(false);
+  const originalUploadRef = useRef<UploadedMedia | null>(null);
+  const [cropNotice, setCropNotice] = useState(false);
+
+  useEffect(() => () => { if (pickedPreview) URL.revokeObjectURL(pickedPreview); }, [pickedPreview]);
+  useEffect(() => () => {
+    // Fresh-file crops share the preview URL; that URL lives until the file is cleared.
+    if (cropSrc?.startsWith("blob:") && cropSrc !== pickedPreview) URL.revokeObjectURL(cropSrc);
+  }, [cropSrc, pickedPreview]);
 
   useEffect(() => {
     if (!open) return;
@@ -87,6 +95,7 @@ export default function MediaPicker({
     crop?: { state: CropState; sourceId: string | null }
   ) {
     setUploading(true);
+    uploadedRef.current = false;
     setError(null);
     try {
       const media = await uploadMediaFile(
@@ -95,10 +104,12 @@ export default function MediaPicker({
         crop
       );
       uploadedRef.current = true;
+      setCropNotice(Boolean(crop));
       onSelect(media);
       setOpen(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "آپلود ناموفق بود");
+      if (crop) throw err;
     } finally {
       setUploading(false);
     }
@@ -119,6 +130,7 @@ export default function MediaPicker({
     if (!pickedPreview) return;
     setCropError(null);
     setCropTarget(null);
+    originalUploadRef.current = null;
     setCropInitial(null);
     setCropPending("file");
     setCropSrc(pickedPreview);
@@ -172,11 +184,16 @@ export default function MediaPicker({
   }
 
   async function handleCropConfirm(out: CropOutput) {
+    // Preserve the source once, including when the cropped-copy upload is retried.
+    if (cropPending === "file" && pickedFile && !originalUploadRef.current) {
+      originalUploadRef.current = await uploadMediaFile(pickedFile, "");
+    }
     await uploadAndSelect(out.blob, out.fileName, {
       state: out.state,
-      sourceId: cropTarget?.id ?? null,
+      sourceId: originalUploadRef.current?.id ?? cropTarget?.id ?? null,
     });
     if (uploadedRef.current) {
+      setCropNotice(true);
       closeCrop();
       setPickedFile(null);
       setPickedPreview(null);
@@ -189,6 +206,7 @@ export default function MediaPicker({
     setCropError(null);
     setCropTarget(null);
     setCropInitial(null);
+    originalUploadRef.current = null;
     uploadedRef.current = false;
   }
 
@@ -196,6 +214,11 @@ export default function MediaPicker({
 
   return (
     <div>
+      {cropNotice && value && (
+        <p role="status" className="mb-2 text-xs text-blue-700">
+          تصویر کراپ‌شده انتخاب شد؛ برای اعمال در سایت، پست را ذخیره کنید.
+        </p>
+      )}
       {value ? (
         <div className="relative border border-zinc-200 rounded-lg overflow-hidden bg-zinc-50">
           {kind === "image" ? (
@@ -442,7 +465,6 @@ export default function MediaPicker({
               ? "ویرایش مجدد کِراپ"
               : "کِراپ تصویر"
         }
-        defaultAspect={kind === "image" ? 16 / 9 : undefined}
         outputMime={cropTarget?.mimeType ?? pickedFile?.type ?? undefined}
         initialState={cropInitial}
         onCancel={closeCrop}
