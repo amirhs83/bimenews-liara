@@ -47,8 +47,8 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
                     />
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col pt-1">
-                    <h3 className="h-[52px] shrink-0 line-clamp-2 font-medium text-[14px] text-[#08328c] group-hover:text-blue-700 transition-colors leading-[26px]">
-                      «{item.title}»
+                    <h3 className="h-[52px] shrink-0 line-clamp-2 font-bold text-[14.5px] text-[#08328c] group-hover:text-blue-700 transition-colors leading-[26px]">
+                      {item.title}
                     </h3>
                     {/* Persian time + date — BELOW the title with a consistent gap:
                         time at the far left, then the date, clock icon trailing */}
