@@ -15,8 +15,8 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
     <section className="bg-white border-b border-zinc-200">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-6 pb-6 pt-2.5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Breaking headlines list (right side in RTL) */}
-          <div className={hero ? "lg:col-span-6 order-2 lg:order-1" : "lg:col-span-12 order-2 lg:order-1"}>
+          {/* Breaking headlines list (left side on desktop) */}
+          <div className={hero ? "lg:col-span-6 order-2 lg:order-2" : "lg:col-span-12 order-2 lg:order-1"}>
             <div className="flex items-center gap-3 mb-4">
               <div className="breaking-badge">
                 <span className="live-dot"></span>
@@ -63,9 +63,9 @@ export default function TopNewsStrip({ breaking, hero }: Props) {
             </div>
           </div>
 
-          {/* Featured photo (left side in RTL) */}
+          {/* Featured photo (right side on desktop) */}
           {hero && (
-            <div className="lg:col-span-6 order-1 lg:order-2">
+            <div className="lg:col-span-6 order-1 lg:order-1">
               {/* Hero card — white reference card on sm+ (unchanged).
                   On mobile only, a flat Entekhab-style lead story via the
                   scoped `flatRoot` modifier (see top-news-strip.module.css).
