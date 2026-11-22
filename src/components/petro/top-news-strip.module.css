@@ -14,8 +14,20 @@
  *    list and every other component share none of these class names.
  */
 
-/* Elements that exist only for the mobile variant */
-.rutitr,
+/* Kicker is visible at every viewport size; time remains mobile-only. */
+.rutitr {
+  display: block;
+  font-size: 13px;
+  line-height: 21px;
+  font-weight: 400;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
 .metaTime {
   display: none;
 }

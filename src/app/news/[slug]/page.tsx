@@ -196,6 +196,11 @@ export default async function NewsPage({ params }: Params) {
 
           {/* Header */}
           <header className="mb-6">
+            {post.kicker?.trim() && (
+              <p className="mb-2 truncate text-[13px] leading-[21px] font-normal text-black" title={post.kicker}>
+                {post.kicker}
+              </p>
+            )}
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.4] text-zinc-950 mb-4">
               {post.title}
             </h1>
