@@ -6,6 +6,22 @@ import { TrendingUp, TrendingDown, Activity } from "lucide-react";
 
 const POLL_INTERVAL_MS = 15_000;
 
+const marketClock = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Asia/Tehran",
+  weekday: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+export function isMarketOpen(now: Date): boolean {
+  const parts = marketClock.formatToParts(now);
+  const part = (type: string) => parts.find((p) => p.type === type)?.value;
+  const minutes = Number(part("hour")) * 60 + Number(part("minute"));
+  return ["Sat", "Sun", "Mon", "Tue", "Wed"].includes(part("weekday") ?? "")
+    && minutes >= 9 * 60 && minutes < 12 * 60 + 30;
+}
+
 function toFaDigits(s: string | number): string {
   return String(s).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]);
 }
@@ -30,6 +46,23 @@ function CommodityIcon({ icon, alt }: { icon: string; alt: string }) {
 }
 
 export default function CommodityTicker() {
+  const [marketOpen, setMarketOpen] = useState<boolean | null>(null);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const update = () => {
+      clearTimeout(timer);
+      setMarketOpen(isMarketOpen(new Date()));
+      timer = setTimeout(update, 60_000 - (Date.now() % 60_000));
+    };
+    update();
+    window.addEventListener("focus", update);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("focus", update);
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, []);
   const [prices, setPrices] = useState<CommodityPrice[]>(commodityPrices);
   const [dragging, setDragging] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -126,9 +159,9 @@ export default function CommodityTicker() {
               <Activity className="w-3.5 h-3.5 text-blue-400" />
             </div>
             <div className="leading-tight">
-              <div className="text-[10px] uppercase text-zinc-500 font-bold flex items-center gap-1">
-                <span className="live-dot"></span>
-                بازار زنده
+              <div className="text-[10px] text-zinc-500 font-bold flex items-center gap-1" style={{ visibility: marketOpen === null ? "hidden" : "visible" }}>
+                <span className={marketOpen ? "live-dot" : "w-1.5 h-1.5 rounded-full bg-zinc-400"}></span>
+                <span dir={marketOpen ? "rtl" : "ltr"}>{marketOpen ? "بازار زنده" : "Market Closed"}</span>
               </div>
               <div className="text-[9px] text-zinc-400">Real-time</div>
             </div>
