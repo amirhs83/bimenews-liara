@@ -1,11 +1,9 @@
 import Image from "next/image";
-import { ArrowLeft } from "lucide-react";
 import type { HomePost } from "@/lib/home-data";
 import { faDateLong } from "@/lib/post-format";
 
 export default function MagazineSection({
   items,
-  archiveHref = "#",
 }: {
   items: HomePost[];
   archiveHref?: string;
@@ -81,16 +79,6 @@ export default function MagazineSection({
                 ))}
               </div>
 
-              {/* Read latest edition */}
-              <a
-                href={archiveHref}
-                className="inline-flex items-center gap-2.5 mt-6 sm:mt-8 font-bold text-sm sm:text-base text-zinc-950 hover:text-red-700 transition-colors group"
-              >
-                <span className="w-7 h-7 rounded-full bg-zinc-950 group-hover:bg-red-700 flex items-center justify-center transition-colors">
-                  <ArrowLeft className="w-4 h-4 text-white" />
-                </span>
-                خواندن آخرین شماره
-              </a>
             </div>
           </div>
         </div>
