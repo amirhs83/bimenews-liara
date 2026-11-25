@@ -42,7 +42,7 @@ export default function LatestArticlesSection({ items }: { items: HomePost[] }) 
             </h2>
           </div>
           <a
-            href="/category/magazine"
+            href="/archive"
             className="inline-flex items-center gap-1 text-xs sm:text-sm text-zinc-600 hover:text-blue-700 mb-2 transition-colors group"
           >
             آرشیو
