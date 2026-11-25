@@ -44,6 +44,8 @@ export default async function ArchivePage({ searchParams }: Props) {
   const total = await db.post.count({ where });
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   if (page > totalPages) notFound();
+  const firstPage = Math.max(1, Math.min(page - 4, totalPages - 9));
+  const visiblePages = Array.from({ length: Math.min(10, totalPages) }, (_, index) => firstPage + index);
   const [posts, navItems] = await Promise.all([
     db.post.findMany({
       where,
@@ -104,10 +106,24 @@ export default async function ArchivePage({ searchParams }: Props) {
             </ul>
           )}
           {totalPages > 1 && (
-            <nav aria-label="صفحه‌بندی آرشیو خبرها" className="flex flex-wrap items-center justify-center gap-3 mt-6 text-sm">
-              {page > 1 && <Link rel="prev" href={pageUrl(page - 1)} className="border border-zinc-300 rounded px-3 py-2 hover:text-blue-700">جدیدتر</Link>}
-              <span className="text-zinc-500">صفحه {faDigits(page)} از {faDigits(totalPages)}</span>
-              {page < totalPages && <Link rel="next" href={pageUrl(page + 1)} className="border border-zinc-300 rounded px-3 py-2 hover:text-blue-700">قدیمی‌تر</Link>}
+            <nav aria-label="صفحه‌بندی آرشیو خبرها" className="flex flex-wrap items-center justify-center mt-6 text-base sm:text-lg" dir="rtl">
+              {page > 1 ? (
+                <Link rel="prev" href={pageUrl(page - 1)} className="min-h-11 border border-zinc-200 rounded-r-lg px-4 py-2 text-slate-600 hover:bg-zinc-100">قبلی</Link>
+              ) : (
+                <span aria-disabled="true" className="min-h-11 border border-zinc-200 rounded-r-lg px-4 py-2 text-zinc-300">قبلی</span>
+              )}
+              {visiblePages.map(number => (
+                <Link key={number} href={pageUrl(number)} aria-label={`صفحه ${faDigits(number)}`}
+                  aria-current={number === page ? "page" : undefined}
+                  className={`min-w-11 min-h-11 border border-zinc-200 px-3 py-2 text-center tabular-nums ${number === page ? "bg-[#003b57] text-white" : "text-slate-600 hover:bg-zinc-100"}`}>
+                  {faDigits(number)}
+                </Link>
+              ))}
+              {page < totalPages ? (
+                <Link rel="next" href={pageUrl(page + 1)} className="min-h-11 border border-zinc-200 rounded-l-lg px-4 py-2 text-slate-600 hover:bg-zinc-100">بعدی</Link>
+              ) : (
+                <span aria-disabled="true" className="min-h-11 border border-zinc-200 rounded-l-lg px-4 py-2 text-zinc-300">بعدی</span>
+              )}
             </nav>
           )}
         </div>
